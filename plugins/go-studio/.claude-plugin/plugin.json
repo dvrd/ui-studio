@@ -1,0 +1,9 @@
+{
+  "name": "go-studio",
+  "description": "Go Studio plugin for building Go+Templ+HTMX SaaS apps with chi, pgx, Goose, Stripe, SSE, and JWT auth patterns",
+  "version": "1.0.0",
+  "author": {
+    "name": "Go Studio"
+  },
+  "keywords": ["go", "templ", "htmx", "tailwind", "chi", "postgres", "saas", "stripe", "jwt"]
+}

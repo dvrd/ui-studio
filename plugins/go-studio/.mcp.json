@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "go-stack": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../../go-stack-mcp/index.mjs"]
+    },
+    "templui": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../../templui-mcp/index.mjs"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--viewport=1440x900"]
+    }
+  }
+}

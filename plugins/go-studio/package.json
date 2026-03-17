@@ -1,0 +1,6 @@
+{
+  "name": "@go-studio/plugin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Go Studio Claude Code plugin"
+}
