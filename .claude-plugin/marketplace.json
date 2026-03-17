@@ -1,16 +1,21 @@
 {
-  "name": "go-studio",
+  "name": "ui-studio",
   "owner": {
-    "name": "Go Studio"
+    "name": "ui-studio"
   },
   "metadata": {
-    "description": "Go Studio plugins for building Go+Templ+HTMX SaaS apps for clients"
+    "description": "ui-studio — a self-expanding studio generator that specializes in any tech stack"
   },
   "plugins": [
     {
       "name": "dvrd",
       "source": "./plugins/go-studio",
       "description": "Plugin for building production Go SaaS applications with chi, pgx, Templ, HTMX, Tailwind v4, templUI, JWT auth, Stripe, and SSE"
+    },
+    {
+      "name": "studio-generator",
+      "source": "./plugins/studio-generator",
+      "description": "Generates specialized Claude Code studios for any tech stack by inferring patterns from existing code"
     }
   ]
 }

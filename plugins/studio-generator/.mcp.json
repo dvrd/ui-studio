@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "studio-generator": {
+      "command": "bun",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../../generator/index.ts"]
+    }
+  }
+}

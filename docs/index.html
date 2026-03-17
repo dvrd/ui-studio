@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ui-studio — Generate your studio</title>
+  <meta name="description" content="A self-expanding Claude Code studio factory. Point it at any codebase — it infers your patterns and generates a specialized AI coding assistant.">
+  <meta property="og:title" content="ui-studio — Generate your studio">
+  <meta property="og:description" content="Infers patterns from your codebase. Generates a Claude Code studio tailored to your stack.">
+  <meta property="og:url" content="https://ui-studio.devoured.io">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream:       #faf7f2;
+      --cream-2:     #f2ede4;
+      --cream-3:     #e8e0d4;
+      --ink:         #171310;
+      --ink-2:       #4a4440;
+      --ink-3:       #8a8078;
+      --orange:      #c95c1e;
+      --orange-l:    #e07545;
+      --teal:        #0c6e65;
+      --black:       #0c0b09;
+      --white:       #fefdfb;
+
+      --f-display: 'Cormorant', Georgia, serif;
+      --f-mono:    'JetBrains Mono', 'Courier New', monospace;
+      --f-body:    'DM Sans', system-ui, sans-serif;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--f-body);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 3.5rem;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    nav.scrolled {
+      background: rgba(250,247,242,0.94);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(23,19,16,0.08);
+    }
+
+    .nav-logo {
+      font-family: var(--f-mono);
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-logo b { color: var(--orange); font-weight: 500; }
+
+    .nav-center {
+      display: flex;
+      gap: 2.5rem;
+    }
+    .nav-center a {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-center a:hover { color: var(--ink); }
+
+    .nav-cta {
+      font-family: var(--f-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      padding: 0.6rem 1.5rem;
+      background: var(--ink);
+      color: var(--cream);
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .nav-cta:hover { background: var(--orange); transform: translateY(-1px); }
+
+    /* ─── HERO ───────────────────────────────────────── */
+    .hero {
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      padding: 12rem 4rem 6rem 3.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-right {
+      background: var(--cream-2);
+      padding: 10rem 3.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      clip-path: polygon(8% 0, 100% 0, 100% 100%, 0% 100%);
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--f-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: rise 0.7s var(--ease-out) 0.2s forwards;
+    }
+
+    .hero-h1 {
+      font-family: var(--f-display);
+      font-size: clamp(4.5rem, 6.5vw, 7.5rem);
+      font-weight: 600;
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      margin-bottom: 2.2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: rise 0.8s var(--ease-out) 0.35s forwards;
+    }
+
+    .hero-h1 em {
+      font-style: italic;
+      color: var(--orange);
+      display: block;
+    }
+
+    .hero-p {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--ink-2);
+      max-width: 420px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: rise 0.7s var(--ease-out) 0.55s forwards;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: rise 0.7s var(--ease-out) 0.7s forwards;
+    }
+
+    .btn-fill {
+      font-family: var(--f-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      padding: 0.9rem 2rem;
+      background: var(--ink);
+      color: var(--cream);
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-fill:hover { background: var(--orange); transform: translateY(-1px); }
+
+    .btn-ghost {
+      font-family: var(--f-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      padding: 0.9rem 2rem;
+      background: transparent;
+      color: var(--ink-3);
+      border: 1px solid var(--cream-3);
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--ink-2); color: var(--ink); }
+
+    /* Terminal */
+    .term {
+      background: #0d1117;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.04);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: rise 1s var(--ease-out) 0.9s forwards;
+      width: 100%;
+      max-width: 540px;
+      margin-left: auto;
+    }
+
+    .term-bar {
+      background: #161b22;
+      padding: 0.65rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .term-dot {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+    }
+    .term-dot:nth-child(1) { background: #ff5f57; }
+    .term-dot:nth-child(2) { background: #febc2e; }
+    .term-dot:nth-child(3) { background: #28c840; }
+    .term-title {
+      font-family: var(--f-mono);
+      font-size: 0.68rem;
+      color: #4d5566;
+      margin: 0 auto;
+    }
+
+    .term-body {
+      padding: 1.4rem 1.6rem;
+      font-family: var(--f-mono);
+      font-size: 0.76rem;
+      line-height: 1.9;
+      min-height: 300px;
+      overflow: hidden;
+    }
+
+    .tl { display: block; }
+    .tc-prompt { color: #3b82f6; }
+    .tc-cmd    { color: #e6edf3; }
+    .tc-ok     { color: #22c55e; }
+    .tc-info   { color: #58a6ff; }
+    .tc-warn   { color: #eab308; }
+    .tc-accent { color: #e07545; }
+    .tc-muted  { color: #4d5566; }
+
+    .cursor {
+      display: inline-block;
+      width: 7px; height: 13px;
+      background: #3b82f6;
+      vertical-align: text-bottom;
+      animation: blink 1.1s step-end infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ─── TICKER ─────────────────────────────────────── */
+    .ticker {
+      background: var(--ink);
+      padding: 0.9rem 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-row {
+      display: inline-flex;
+      animation: marquee 28s linear infinite;
+    }
+    .ti {
+      font-family: var(--f-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(250,247,242,0.3);
+      padding: 0 2.8rem;
+    }
+    .ti.hot { color: var(--orange-l); }
+    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+    /* ─── SECTION SCAFFOLD ───────────────────────────── */
+    .section-wrap {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 0 3.5rem;
+    }
+
+    .tag {
+      font-family: var(--f-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 5rem;
+    }
+    .tag::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.2;
+    }
+
+    /* ─── STEPS ──────────────────────────────────────── */
+    .how { padding: 9rem 0; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .step {
+      padding: 3.5rem 3rem;
+      border-left: 1px solid rgba(23,19,16,0.1);
+    }
+    .step:first-child { border-left: none; padding-left: 0; }
+
+    .step-n {
+      font-family: var(--f-display);
+      font-size: 5rem;
+      font-weight: 300;
+      line-height: 1;
+      color: var(--orange);
+      opacity: 0.5;
+      margin-bottom: 1.8rem;
+    }
+    .step-title {
+      font-family: var(--f-display);
+      font-size: 1.65rem;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 0.9rem;
+    }
+    .step-p {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: var(--ink-2);
+      margin-bottom: 1.5rem;
+    }
+    .code-pill {
+      font-family: var(--f-mono);
+      font-size: 0.7rem;
+      background: var(--ink);
+      color: var(--cream-2);
+      padding: 0.6rem 1rem;
+      letter-spacing: 0.02em;
+      display: inline-block;
+    }
+    .code-pill .ok { color: #22c55e; }
+
+    /* reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* ─── DARK SHOWCASE ──────────────────────────────── */
+    .dark-section {
+      background: var(--black);
+      padding: 9rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dark-bg-word {
+      position: absolute;
+      right: -3rem; bottom: -6rem;
+      font-family: var(--f-display);
+      font-size: 22vw;
+      font-weight: 700;
+      color: rgba(255,255,255,0.025);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .dark-grid {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 7rem;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dark-tag { color: rgba(255,255,255,0.25); }
+    .dark-tag::after { background: rgba(255,255,255,0.12); opacity: 1; }
+
+    .dark-h2 {
+      font-family: var(--f-display);
+      font-size: clamp(2.8rem, 4vw, 4.5rem);
+      font-weight: 500;
+      color: var(--white);
+      line-height: 1.08;
+      margin-bottom: 2rem;
+    }
+    .dark-h2 em { font-style: italic; color: var(--orange-l); }
+
+    .dark-p {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 2.5rem;
+    }
+
+    .feat-list { list-style: none; }
+    .feat-list li {
+      font-size: 0.84rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.6;
+      padding: 0.65rem 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      gap: 0.9rem;
+    }
+    .feat-list li:last-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .feat-list li::before {
+      content: '→';
+      color: var(--orange-l);
+      font-family: var(--f-mono);
+      flex-shrink: 0;
+    }
+
+    .showcase-term {
+      background: #0d1117;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .showcase-term pre {
+      font-family: var(--f-mono);
+      font-size: 0.74rem;
+      line-height: 1.55;
+      color: #8b949e;
+      padding: 1.6rem 1.8rem;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    /* ─── STACK GRID ─────────────────────────────────── */
+    .stacks-section { padding: 9rem 0; }
+
+    .stacks-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: rgba(23,19,16,0.1);
+    }
+
+    .stack-card {
+      background: var(--cream);
+      padding: 2.8rem 2.2rem;
+      transition: background 0.25s;
+    }
+    .stack-card:hover { background: var(--cream-2); }
+
+    .stack-id {
+      font-family: var(--f-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1.1rem;
+    }
+    .stack-name {
+      font-family: var(--f-display);
+      font-size: 1.45rem;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .stack-desc {
+      font-size: 0.8rem;
+      color: var(--ink-3);
+      line-height: 1.7;
+    }
+
+    /* ─── CTA ────────────────────────────────────────── */
+    .cta-section {
+      background: var(--orange);
+      padding: 9rem 3.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-watermark {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--f-display);
+      font-size: 28vw;
+      font-weight: 700;
+      color: rgba(0,0,0,0.06);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+    }
+    .cta-tag {
+      font-family: var(--f-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.4);
+      margin-bottom: 2rem;
+    }
+    .cta-h2 {
+      font-family: var(--f-display);
+      font-size: clamp(3.5rem, 6.5vw, 7rem);
+      font-weight: 600;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 3.5rem;
+      letter-spacing: -0.02em;
+    }
+    .install-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.2rem;
+      background: rgba(0,0,0,0.14);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 1rem 1.6rem;
+      margin-bottom: 3rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+    .install-box:hover { background: rgba(0,0,0,0.22); }
+    .install-box code {
+      font-family: var(--f-mono);
+      font-size: 0.84rem;
+      color: #fff;
+      letter-spacing: 0.02em;
+    }
+    .install-box .copy-hint {
+      font-family: var(--f-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .cta-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-dark {
+      font-family: var(--f-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      padding: 0.9rem 2rem;
+      background: var(--ink);
+      color: var(--cream);
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-dark:hover { background: #000; transform: translateY(-1px); }
+    .btn-stroke {
+      font-family: var(--f-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      padding: 0.9rem 2rem;
+      background: transparent;
+      color: rgba(0,0,0,0.65);
+      border: 1px solid rgba(0,0,0,0.3);
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-stroke:hover { border-color: rgba(0,0,0,0.65); color: var(--ink); }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--black);
+      padding: 3.5rem 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    .foot-logo {
+      font-family: var(--f-mono);
+      font-size: 0.8rem;
+      color: rgba(250,247,242,0.3);
+      letter-spacing: 0.05em;
+    }
+    .foot-logo b { color: var(--orange-l); }
+    .foot-links { display: flex; gap: 2.5rem; }
+    .foot-links a {
+      font-family: var(--f-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(250,247,242,0.2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .foot-links a:hover { color: rgba(250,247,242,0.65); }
+    .foot-domain {
+      font-family: var(--f-mono);
+      font-size: 0.65rem;
+      color: rgba(250,247,242,0.12);
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── KEYFRAMES ──────────────────────────────────── */
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-right { clip-path: none; padding: 4rem 3.5rem; }
+      .dark-grid { grid-template-columns: 1fr; gap: 4rem; }
+      .stacks-grid { grid-template-columns: repeat(2,1fr); }
+      .steps { grid-template-columns: 1fr; }
+      .step { border-left: none; border-top: 1px solid rgba(23,19,16,0.1); padding-left: 0; }
+      .step:first-child { border-top: none; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-center { display: none; }
+      .hero-left { padding: 9rem 1.5rem 3rem; }
+      .hero-right { padding: 2.5rem 1.5rem 4rem; }
+      .section-wrap { padding: 0 1.5rem; }
+      .stacks-grid { grid-template-columns: 1fr; }
+      .cta-section { padding: 7rem 1.5rem; }
+      footer { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .foot-links { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─────────────────────────────────────────── -->
+<nav id="nav">
+  <a class="nav-logo" href="#"><b>ui</b>-studio</a>
+  <div class="nav-center">
+    <a href="#how">Process</a>
+    <a href="#showcase">The TUI</a>
+    <a href="#stacks">Stacks</a>
+    <a href="https://github.com/kakurega/ui-studio">GitHub</a>
+  </div>
+  <a class="nav-cta" href="#install">Get started →</a>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">001 / Studio generator</p>
+    <h1 class="hero-h1">
+      Generate<br>
+      <em>any studio.</em>
+    </h1>
+    <p class="hero-p">
+      A self-expanding Claude Code studio factory. Point it at any codebase — it infers your patterns, conventions, and stack, then generates a specialized AI coding assistant built around <em>your</em> code.
+    </p>
+    <div class="hero-btns">
+      <a href="#install" class="btn-fill">Generate a studio</a>
+      <a href="https://github.com/kakurega/ui-studio" class="btn-ghost">View on GitHub</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="term" id="heroTerm">
+      <div class="term-bar">
+        <div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div>
+        <span class="term-title">ui-studio — generator</span>
+      </div>
+      <div class="term-body" id="termBody">
+        <span class="tl"><span class="tc-muted">❯</span> <span id="typeTarget"></span><span class="cursor" id="cur"></span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TICKER ────────────────────────────────────────── -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-row" id="tickerRow">
+    <span class="ti hot">Go + Templ + HTMX</span>
+    <span class="ti">Next.js + Drizzle</span>
+    <span class="ti">Python + FastAPI</span>
+    <span class="ti hot">Flutter + Riverpod</span>
+    <span class="ti">Rust + Axum</span>
+    <span class="ti">Node.js + Fastify</span>
+    <span class="ti hot">React + Vite</span>
+    <span class="ti">Django + DRF</span>
+    <span class="ti">Hono + Bun</span>
+    <span class="ti hot">Any stack →</span>
+    <span class="ti hot">Go + Templ + HTMX</span>
+    <span class="ti">Next.js + Drizzle</span>
+    <span class="ti">Python + FastAPI</span>
+    <span class="ti hot">Flutter + Riverpod</span>
+    <span class="ti">Rust + Axum</span>
+    <span class="ti">Node.js + Fastify</span>
+    <span class="ti hot">React + Vite</span>
+    <span class="ti">Django + DRF</span>
+    <span class="ti">Hono + Bun</span>
+    <span class="ti hot">Any stack →</span>
+  </div>
+</div>
+
+<!-- ─── HOW IT WORKS ──────────────────────────────────── -->
+<section class="how" id="how">
+  <div class="section-wrap">
+    <p class="tag">002 / Process</p>
+    <div class="steps">
+
+      <div class="step reveal">
+        <div class="step-n">01</div>
+        <h3 class="step-title">Point at your project</h3>
+        <p class="step-p">Run the interactive TUI wizard and provide a path to your existing codebase. Or describe your stack manually if you're starting fresh.</p>
+        <span class="code-pill">bun run cli</span>
+      </div>
+
+      <div class="step reveal" style="transition-delay:.14s">
+        <div class="step-n">02</div>
+        <h3 class="step-title">Patterns are inferred</h3>
+        <p class="step-p">ui-studio scans your handlers, services, repositories, models, and components — extracting real conventions from real code, not templates.</p>
+        <span class="code-pill">
+          <span class="ok">✓</span> Go + chi + Templ detected<br>
+          <span class="ok">✓</span> 7 patterns inferred
+        </span>
+      </div>
+
+      <div class="step reveal" style="transition-delay:.28s">
+        <div class="step-n">03</div>
+        <h3 class="step-title">Studio is generated</h3>
+        <p class="step-p">A complete Claude Code plugin lands in <code style="font-family:var(--f-mono);font-size:0.85em">~/.claude/plugins/</code> with a pattern MCP server, skills, agents, and rules tailored to your stack.</p>
+        <span class="code-pill"><span class="ok">✓</span> nextjs-studio installed</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── SHOWCASE ───────────────────────────────────────── -->
+<section class="dark-section" id="showcase">
+  <div class="dark-bg-word">studio</div>
+  <div class="section-wrap">
+    <div class="dark-grid">
+      <div class="reveal">
+        <p class="tag dark-tag">003 / The TUI</p>
+        <h2 class="dark-h2">An <em>interactive</em><br>wizard for every<br>new project</h2>
+        <p class="dark-p">
+          Built with OpenTUI — a native Zig terminal renderer. The wizard detects your stack, confirms inferred patterns, and installs the studio in seconds.
+        </p>
+        <ul class="feat-list">
+          <li>Detects Go, Next.js, Python, Flutter, Rust, Node.js automatically</li>
+          <li>Infers conventions from actual source files — not guesswork</li>
+          <li>Falls back to manual description when no code exists yet</li>
+          <li>Registers the MCP server in <code style="font-family:var(--f-mono);font-size:0.85em;color:rgba(255,255,255,0.6)">~/.claude/settings.json</code></li>
+          <li>Re-runs inference via <code style="font-family:var(--f-mono);font-size:0.82em;color:var(--orange-l)">expand_studio</code> as the project grows</li>
+        </ul>
+      </div>
+
+      <div class="showcase-term reveal" style="transition-delay:.2s">
+        <div class="term-bar">
+          <div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div>
+          <span class="term-title">ui-studio generator</span>
+        </div>
+        <pre>┌─────────────────────────────────────────┐
+│  <span style="color:#3b82f6">ui</span><span style="color:#e6edf3">-studio</span> <span style="color:#4d5566">generator</span>                     │
+├─────────────────────────────────────────┤
+│  <span style="color:#4d5566">Step 2/4</span>  <span style="color:#e6edf3">Project path</span>                  │
+│                                         │
+│  <span style="color:#4d5566">Path to existing project to infer</span>       │
+│  <span style="color:#4d5566">patterns from. Leave empty for manual.</span>  │
+│                                         │
+│ ┌───────────────────────────────────┐   │
+│ │ <span style="color:#e6edf3">/Users/dev/my-nextjs-app</span><span style="color:#3b82f6">▌</span>        │   │
+│ └───────────────────────────────────┘   │
+│                                         │
+│  <span style="color:#22c55e">✓ Detected: Next.js + Drizzle ORM</span>      │
+│  <span style="color:#22c55e">✓ Features: stripe, auth, drizzle</span>       │
+│  <span style="color:#22c55e">✓ Patterns inferred: 5</span>                  │
+│    <span style="color:#58a6ff">• api-routes  • components  • lib</span>     │
+│    <span style="color:#58a6ff">• db  • server-actions</span>               │
+│                                         │
+├─────────────────────────────────────────┤
+│  <span style="color:#4d5566">Enter: next  │  Esc: back  │  ^C: quit</span>  │
+└─────────────────────────────────────────┘</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STACKS ─────────────────────────────────────────── -->
+<section class="stacks-section" id="stacks">
+  <div class="section-wrap">
+    <p class="tag">004 / Supported stacks</p>
+    <div class="stacks-grid">
+
+      <div class="stack-card reveal">
+        <p class="stack-id">go-templ</p>
+        <h3 class="stack-name">Go + Templ + HTMX</h3>
+        <p class="stack-desc">chi router, pgx, Goose migrations, Tailwind v4, templUI components</p>
+      </div>
+
+      <div class="stack-card reveal" style="transition-delay:.06s">
+        <p class="stack-id">nextjs</p>
+        <h3 class="stack-name">Next.js</h3>
+        <p class="stack-desc">App router, Drizzle or Prisma, Stripe, Clerk or next-auth</p>
+      </div>
+
+      <div class="stack-card reveal" style="transition-delay:.12s">
+        <p class="stack-id">python-fastapi</p>
+        <h3 class="stack-name">Python + FastAPI</h3>
+        <p class="stack-desc">SQLAlchemy, Pydantic models, Alembic migrations, Celery tasks</p>
+      </div>
+
+      <div class="stack-card reveal" style="transition-delay:.18s">
+        <p class="stack-id">flutter</p>
+        <h3 class="stack-name">Flutter</h3>
+        <p class="stack-desc">Riverpod state, Dio HTTP client, go_router navigation patterns</p>
+      </div>
+
+      <div class="stack-card reveal" style="transition-delay:.24s">
+        <p class="stack-id">rust-axum</p>
+        <h3 class="stack-name">Rust + Axum</h3>
+        <p class="stack-desc">sqlx, diesel, Tower middleware, Serde serialization patterns</p>
+      </div>
+
+      <div class="stack-card reveal" style="transition-delay:.30s">
+        <p class="stack-id">node-fastify</p>
+        <h3 class="stack-name">Node.js + Fastify</h3>
+        <p class="stack-desc">TypeScript, Fastify plugins, Prisma or Drizzle, optional tRPC</p>
+      </div>
+
+      <div class="stack-card reveal" style="transition-delay:.36s">
+        <p class="stack-id">python-django</p>
+        <h3 class="stack-name">Django</h3>
+        <p class="stack-desc">DRF views, model conventions, migrations, Celery, pytest patterns</p>
+      </div>
+
+      <div class="stack-card reveal" style="transition-delay:.42s">
+        <p class="stack-id">custom</p>
+        <h3 class="stack-name">Your stack</h3>
+        <p class="stack-desc">Any codebase. If it has source files, ui-studio can infer its patterns.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ───────────────────────────────────────────── -->
+<section class="cta-section" id="install">
+  <div class="cta-watermark" aria-hidden="true">generate</div>
+  <p class="cta-tag">005 / Get started</p>
+  <h2 class="cta-h2">Your studio,<br>in seconds.</h2>
+  <div class="install-box" onclick="copyCmd(this)">
+    <code>cd ui-studio/generator &amp;&amp; bun run cli</code>
+    <span class="copy-hint" id="copyHint">copy</span>
+  </div>
+  <div class="cta-btns">
+    <a class="btn-dark" href="https://github.com/kakurega/ui-studio">View on GitHub</a>
+    <a class="btn-stroke" href="https://github.com/kakurega/ui-studio#readme">Read the docs</a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────── -->
+<footer>
+  <div class="foot-logo"><b>ui</b>-studio</div>
+  <nav class="foot-links">
+    <a href="https://github.com/kakurega/ui-studio">GitHub</a>
+    <a href="https://github.com/kakurega/ui-studio/issues">Issues</a>
+    <a href="https://github.com/kakurega/ui-studio/releases">Releases</a>
+  </nav>
+  <p class="foot-domain">ui-studio.devoured.io</p>
+</footer>
+
+<script>
+// ── Nav scroll ──────────────────────────────────────────
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ── Reveal on scroll ────────────────────────────────────
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ── Terminal typing animation ────────────────────────────
+const termBody = document.getElementById('termBody');
+const typeTarget = document.getElementById('typeTarget');
+const cur = document.getElementById('cur');
+
+const seq = [
+  { t: 0,    type: 'type', text: 'bun run cli' },
+  { t: 1100, type: 'clear' },
+  { t: 1200, type: 'line', cls: 'tc-accent',  text: '  ui-studio generator' },
+  { t: 1350, type: 'line', cls: 'tc-muted',   text: '' },
+  { t: 1400, type: 'line', cls: 'tc-info',    text: '  Step 1/4  Studio name' },
+  { t: 1550, type: 'line', cls: 'tc-muted',   text: '  Choose a slug for your studio' },
+  { t: 1650, type: 'line', cls: 'tc-muted',   text: '' },
+  { t: 1750, type: 'line', cls: 'tc-cmd',     text: '  nextjs-studio_' },
+  { t: 2900, type: 'line', cls: 'tc-muted',   text: '' },
+  { t: 3000, type: 'line', cls: 'tc-info',    text: '  Step 2/4  Project path' },
+  { t: 3150, type: 'line', cls: 'tc-cmd',     text: '  /Users/dev/my-nextjs-app_' },
+  { t: 4200, type: 'line', cls: 'tc-muted',   text: '' },
+  { t: 4300, type: 'line', cls: 'tc-ok',      text: '  ✓ Detected: Next.js + Drizzle' },
+  { t: 4480, type: 'line', cls: 'tc-ok',      text: '  ✓ Inferred 5 patterns' },
+  { t: 4660, type: 'line', cls: 'tc-info',    text: '    • api-routes  • components  • db' },
+  { t: 4840, type: 'line', cls: 'tc-muted',   text: '' },
+  { t: 4940, type: 'line', cls: 'tc-ok',      text: '  ✓ Studio installed: nextjs-studio' },
+  { t: 5120, type: 'line', cls: 'tc-ok',      text: '  ✓ MCP server registered' },
+  { t: 5300, type: 'line', cls: 'tc-muted',   text: '' },
+  { t: 5400, type: 'line', cls: 'tc-accent',  text: '  Restart Claude Code to activate ✦' },
+];
+
+function addLine(cls, text) {
+  const s = document.createElement('span');
+  s.className = 'tl ' + cls;
+  s.textContent = text;
+  termBody.appendChild(s);
+  termBody.scrollTop = termBody.scrollHeight;
+}
+
+let typed = '';
+function typeChar(text, i, cb) {
+  if (i >= text.length) { cb && cb(); return; }
+  typeTarget.textContent += text[i];
+  setTimeout(() => typeChar(text, i + 1, cb), 55 + Math.random() * 30);
+}
+
+seq.forEach(({ t, type, text, cls }) => {
+  setTimeout(() => {
+    if (type === 'type') {
+      typeChar(text, 0, null);
+    } else if (type === 'clear') {
+      typeTarget.textContent = '';
+      cur.remove();
+      const firstLine = termBody.querySelector('.tl');
+      if (firstLine) firstLine.remove();
+    } else if (type === 'line') {
+      addLine(cls || '', text || '');
+    }
+  }, t + 800);
+});
+
+// ── Copy install cmd ─────────────────────────────────────
+function copyCmd(el) {
+  const hint = document.getElementById('copyHint');
+  navigator.clipboard.writeText('cd ui-studio/generator && bun run cli').then(() => {
+    hint.textContent = 'copied!';
+    setTimeout(() => hint.textContent = 'copy', 2000);
+  });
+}
+</script>
+
+</body>
+</html>

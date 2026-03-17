@@ -1,14 +1,16 @@
 {
-  "name": "@ui-studio/templui-mcp",
+  "name": "@ui-studio/generator",
   "version": "1.0.0",
-  "description": "MCP server for templUI v1.6 component documentation",
+  "description": "MCP server that generates specialized Claude Code studios from any codebase",
   "main": "./index.ts",
   "scripts": {
     "start": "bun run index.ts",
-    "dev": "bun --watch index.ts"
+    "dev": "bun --watch index.ts",
+    "cli": "bun run cli.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.13.1",
+    "@opentui/core": "latest",
     "zod": "^3.25.0"
   },
   "devDependencies": {

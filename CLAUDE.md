@@ -1,10 +1,10 @@
-# Go Studio
+# ui-studio
 
-Builds production Go SaaS apps for clients using chi, pgx, Templ, HTMX, Tailwind v4, templUI, and standard auth/payments patterns.
+A self-expanding studio generator. Creates specialized Claude Code studios for any tech stack by inferring patterns from existing code or accepting user-defined conventions.
 
 ## Project Structure
 
-This is the **source monorepo** for Go Studio. When making changes, always edit files here — never in `~/.claude/plugins/cache/` (those are runtime copies).
+This is the **source monorepo** for ui-studio. When making changes, always edit files here — never in `~/.claude/plugins/cache/` (those are runtime copies).
 
 - `plugins/go-studio/` — Claude Code plugin (hooks, rules, agents, skills, workflows)
 - `go-stack-mcp/` — MCP server for Go+Templ+HTMX patterns and guides

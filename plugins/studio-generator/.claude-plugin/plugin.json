@@ -1,0 +1,7 @@
+{
+  "name": "studio-generator",
+  "description": "Generates specialized Claude Code studios tailored to any tech stack. Infers patterns from existing code or accepts user-defined conventions.",
+  "version": "1.0.0",
+  "author": { "name": "dvrd-studio" },
+  "keywords": ["generator", "studio", "scaffold", "mcp", "patterns", "go", "nextjs", "python", "flutter"]
+}

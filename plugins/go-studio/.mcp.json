@@ -1,15 +1,15 @@
 {
   "mcpServers": {
     "go-stack": {
-      "command": "node",
-      "args": ["${CLAUDE_PLUGIN_ROOT}/../../go-stack-mcp/index.mjs"]
+      "command": "bun",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../../go-stack-mcp/index.ts"]
     },
     "templui": {
-      "command": "node",
-      "args": ["${CLAUDE_PLUGIN_ROOT}/../../templui-mcp/index.mjs"]
+      "command": "bun",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../../templui-mcp/index.ts"]
     },
     "chrome-devtools": {
-      "command": "npx",
+      "command": "bunx",
       "args": ["-y", "chrome-devtools-mcp@latest", "--viewport=1440x900"]
     }
   }

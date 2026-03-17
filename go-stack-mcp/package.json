@@ -1,22 +1,25 @@
 {
-  "name": "@go-studio/go-stack-mcp",
+  "name": "@ui-studio/go-stack-mcp",
   "version": "1.0.0",
-  "type": "module",
   "description": "MCP server serving Go+Templ+HTMX patterns and guides",
-  "main": "./index.mjs",
+  "main": "./index.ts",
   "bin": {
-    "go-stack-mcp": "./index.mjs"
+    "go-stack-mcp": "./index.ts"
   },
   "scripts": {
-    "start": "node index.mjs",
-    "dev": "node --watch index.mjs"
+    "start": "bun run index.ts",
+    "dev": "bun --watch index.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.13.1",
     "zod": "^3.25.0"
   },
-  "engines": {
-    "node": ">=22.0.0"
+  "devDependencies": {
+    "bun-types": "latest",
+    "typescript": "^5.0.0"
   },
-  "files": ["index.mjs", "lib", "resources"]
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "files": ["index.ts", "lib", "resources"]
 }
