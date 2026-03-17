@@ -457,6 +457,40 @@
       overflow-x: auto;
     }
 
+    .tui-box {
+      font-family: var(--f-mono);
+      font-size: 0.74rem;
+      line-height: 1.55;
+      color: #8b949e;
+      padding: 1.6rem 1.8rem;
+      box-sizing: border-box;
+    }
+    .tui-box table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .tui-row {
+      display: flex;
+      align-items: baseline;
+    }
+    .tui-border-v {
+      color: #3b4250;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .tui-cell {
+      flex: 1;
+      min-width: 0;
+    }
+    .tui-divider {
+      color: #3b4250;
+    }
+    .tui-hr {
+      color: #3b4250;
+      display: block;
+      letter-spacing: -0.05em;
+    }
+
     /* ─── STACK GRID ─────────────────────────────────── */
     .stacks-section { padding: 9rem 0; }
 
@@ -662,7 +696,7 @@
     <a href="#how">Process</a>
     <a href="#showcase">The TUI</a>
     <a href="#stacks">Stacks</a>
-    <a href="https://github.com/kakurega/ui-studio">GitHub</a>
+    <a href="https://github.com/dvrd/ui-studio">GitHub</a>
   </div>
   <a class="nav-cta" href="#install">Get started →</a>
 </nav>
@@ -680,7 +714,7 @@
     </p>
     <div class="hero-btns">
       <a href="#install" class="btn-fill">Generate a studio</a>
-      <a href="https://github.com/kakurega/ui-studio" class="btn-ghost">View on GitHub</a>
+      <a href="https://github.com/dvrd/ui-studio" class="btn-ghost">View on GitHub</a>
     </div>
   </div>
 
@@ -782,27 +816,29 @@
           <div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div>
           <span class="term-title">ui-studio generator</span>
         </div>
-        <pre>┌─────────────────────────────────────────┐
-│  <span style="color:#3b82f6">ui</span><span style="color:#e6edf3">-studio</span> <span style="color:#4d5566">generator</span>                     │
-├─────────────────────────────────────────┤
-│  <span style="color:#4d5566">Step 2/4</span>  <span style="color:#e6edf3">Project path</span>                  │
-│                                         │
-│  <span style="color:#4d5566">Path to existing project to infer</span>       │
-│  <span style="color:#4d5566">patterns from. Leave empty for manual.</span>  │
-│                                         │
-│ ┌───────────────────────────────────┐   │
-│ │ <span style="color:#e6edf3">/Users/dev/my-nextjs-app</span><span style="color:#3b82f6">▌</span>        │   │
-│ └───────────────────────────────────┘   │
-│                                         │
-│  <span style="color:#22c55e">✓ Detected: Next.js + Drizzle ORM</span>      │
-│  <span style="color:#22c55e">✓ Features: stripe, auth, drizzle</span>       │
-│  <span style="color:#22c55e">✓ Patterns inferred: 5</span>                  │
-│    <span style="color:#58a6ff">• api-routes  • components  • lib</span>     │
-│    <span style="color:#58a6ff">• db  • server-actions</span>               │
-│                                         │
-├─────────────────────────────────────────┤
-│  <span style="color:#4d5566">Enter: next  │  Esc: back  │  ^C: quit</span>  │
-└─────────────────────────────────────────┘</pre>
+        <div class="tui-box">
+          <div class="tui-row"><span class="tui-divider">┌─────────────────────────────────────────┐</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#3b82f6">ui</span><span style="color:#e6edf3">-studio</span> <span style="color:#4d5566">generator</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-divider">├─────────────────────────────────────────┤</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#4d5566">Step 2/4</span>&nbsp; <span style="color:#e6edf3">Project path</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell"></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#4d5566">Path to existing project to infer</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#4d5566">patterns from. Leave empty for manual.</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell"></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;<span style="color:#3b4250">┌───────────────────────────────────┐</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;<span style="color:#3b4250">│</span> <span style="color:#e6edf3">/Users/dev/my-nextjs-app</span><span style="color:#3b82f6">▌</span><span style="color:#3b4250">│</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;<span style="color:#3b4250">└───────────────────────────────────┘</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell"></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#22c55e">✓ Detected: Next.js + Drizzle ORM</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#22c55e">✓ Features: stripe, auth, drizzle</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#22c55e">✓ Patterns inferred: 5</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;&nbsp;&nbsp; <span style="color:#58a6ff">• api-routes &nbsp;• components &nbsp;• lib</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;&nbsp;&nbsp; <span style="color:#58a6ff">• db &nbsp;• server-actions</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell"></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-divider">├─────────────────────────────────────────┤</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#4d5566">Enter: next &nbsp;│&nbsp; Esc: back &nbsp;│&nbsp; ^C: quit</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-divider">└─────────────────────────────────────────┘</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -876,8 +912,8 @@
     <span class="copy-hint" id="copyHint">copy</span>
   </div>
   <div class="cta-btns">
-    <a class="btn-dark" href="https://github.com/kakurega/ui-studio">View on GitHub</a>
-    <a class="btn-stroke" href="https://github.com/kakurega/ui-studio#readme">Read the docs</a>
+    <a class="btn-dark" href="https://github.com/dvrd/ui-studio">View on GitHub</a>
+    <a class="btn-stroke" href="https://github.com/dvrd/ui-studio#readme">Read the docs</a>
   </div>
 </section>
 
@@ -885,9 +921,9 @@
 <footer>
   <div class="foot-logo"><b>ui</b>-studio</div>
   <nav class="foot-links">
-    <a href="https://github.com/kakurega/ui-studio">GitHub</a>
-    <a href="https://github.com/kakurega/ui-studio/issues">Issues</a>
-    <a href="https://github.com/kakurega/ui-studio/releases">Releases</a>
+    <a href="https://github.com/dvrd/ui-studio">GitHub</a>
+    <a href="https://github.com/dvrd/ui-studio/issues">Issues</a>
+    <a href="https://github.com/dvrd/ui-studio/releases">Releases</a>
   </nav>
   <p class="foot-domain">ui-studio.devoured.io</p>
 </footer>
