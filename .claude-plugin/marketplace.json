@@ -1,0 +1,16 @@
+{
+  "name": "go-studio",
+  "owner": {
+    "name": "Go Studio"
+  },
+  "metadata": {
+    "description": "Go Studio plugins for building Go+Templ+HTMX SaaS apps for clients"
+  },
+  "plugins": [
+    {
+      "name": "go-studio",
+      "source": "./plugins/go-studio",
+      "description": "Plugin for building production Go SaaS applications with chi, pgx, Templ, HTMX, Tailwind v4, templUI, JWT auth, Stripe, and SSE"
+    }
+  ]
+}
