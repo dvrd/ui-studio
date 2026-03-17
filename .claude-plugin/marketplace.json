@@ -8,7 +8,7 @@
   },
   "plugins": [
     {
-      "name": "go-studio",
+      "name": "dvrd",
       "source": "./plugins/go-studio",
       "description": "Plugin for building production Go SaaS applications with chi, pgx, Templ, HTMX, Tailwind v4, templUI, JWT auth, Stripe, and SSE"
     }
