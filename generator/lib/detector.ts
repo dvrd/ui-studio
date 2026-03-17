@@ -26,7 +26,7 @@ const DETECTORS: Detector[] = [
 
       const features: string[] = [];
       if (content.includes('jackc/pgx')) features.push('postgres');
-      if (content.includes('jmoiern/sqlx') || content.includes('sqlx')) features.push('sqlx');
+      if (content.includes('jmoiron/sqlx')) features.push('sqlx');
       if (content.includes('stripe-go')) features.push('stripe');
       if (content.includes('a-h/templ')) features.push('templ');
       if (content.includes('golang-jwt') || content.includes('lestrrat-go/jwx')) features.push('jwt');

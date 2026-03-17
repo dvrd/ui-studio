@@ -240,19 +240,17 @@ async function buildUI(): Promise<Layout> {
 
 // ─── Step renderers ───────────────────────────────────────────────────────────
 
-const STEPS: Record<string, { index: number; total: number }> = {
-  name:       { index: 1, total: 4 },
-  path:       { index: 2, total: 4 },
-  'stack-desc': { index: 3, total: 4 },
-  confirm:    { index: 3, total: 4 },
-  generating: { index: 4, total: 4 },
-  done:       { index: 4, total: 4 },
-  error:      { index: 4, total: 4 },
-};
-
 function stepLabel(step: Step): string {
-  const s = STEPS[step];
-  return s ? fg(C.muted)(`Step ${s.index}/${s.total}  `) : '';
+  const withDesc = !state.projectPath || !state.stack;
+  const total = withDesc ? 4 : 3;
+  const indexMap: Partial<Record<Step, number>> = {
+    name:         1,
+    path:         2,
+    'stack-desc': 3,
+    confirm:      withDesc ? 4 : 3,
+  };
+  const index = indexMap[step];
+  return index != null ? fg(C.muted)(`Step ${index}/${total}  `) : '';
 }
 
 function renderStep(ui: Layout) {
@@ -260,6 +258,14 @@ function renderStep(ui: Layout) {
 
   // Hide confirm box by default
   try { ui.contentBox.remove('confirm-box'); } catch {}
+
+  // Restore input box in correct order (may have been removed at the confirm step)
+  if (step === 'name' || step === 'path' || step === 'stack-desc') {
+    try { ui.contentBox.remove('input-box'); } catch {}
+    try { ui.contentBox.remove('status'); } catch {}
+    ui.contentBox.add(ui.inputBox);
+    ui.contentBox.add(ui.statusText);
+  }
 
   switch (step) {
     case 'name': {
@@ -314,7 +320,10 @@ ${bold(fg(C.text)('Install path:'))}  ${fg(C.muted)(join(homedir(), '.claude', '
       // Swap input box for confirm select
       try { ui.contentBox.remove('input-box'); } catch {}
       ui.contentBox.add(ui.confirmBox);
-      ui.statusText.content = '';
+      const existingPath = join(homedir(), '.claude', 'plugins', state.studioName);
+      ui.statusText.content = existsSync(existingPath)
+        ? fg(C.yellow)('⚠  Studio already exists — files will be overwritten')
+        : '';
       ui.footerText.content = fg(C.muted)('↑↓: select  │  Enter: confirm  │  Backspace: go back  │  Ctrl+C: quit');
       ui.confirmSelect.focus();
       break;
@@ -343,7 +352,7 @@ ${fg(C.green)('1.')} Restart Claude Code to activate the studio
 ${fg(C.green)('2.')} The MCP server ${fg(C.accent)(state.studioName + '-patterns')} will be available
 ${fg(C.green)('3.')} ${state.patterns.length > 0 ? 'Patterns are ready — call list_resources to see them' : 'Add patterns to: ' + state.resultPath + '/mcp/resources/patterns/'}`;
       ui.statusText.content = '';
-      ui.footerText.content = fg(C.muted)('Ctrl+C: quit');
+      ui.footerText.content = fg(C.muted)('Enter or Ctrl+C: quit');
       break;
     }
 
@@ -463,16 +472,22 @@ async function generate(ui: Layout) {
       stack,
       patterns: state.patterns,
       installPath,
+      userDefinedConventions: state.stack ? undefined : state.stackDesc || undefined,
     });
 
     registerStudio(state.studioName, studioPath);
 
     // Install MCP deps
-    const proc = Bun.spawnSync(['bun', 'install'], {
+    const proc = Bun.spawn(['bun', 'install'], {
       cwd: join(studioPath, 'mcp'),
       stdout: 'pipe',
       stderr: 'pipe',
     });
+    const exitCode = await proc.exited;
+    if (exitCode !== 0) {
+      const errText = await new Response(proc.stderr).text();
+      throw new Error(`bun install failed (exit ${exitCode}): ${errText}`);
+    }
 
     state.resultPath = studioPath;
     state.step = 'done';
@@ -526,6 +541,11 @@ async function main() {
 
     // Enter on confirm step goes to generate (handled by select)
     // Enter on input steps handled by SUBMIT event above
+
+    // Enter on done: quit
+    if (key.name === 'return' && step === 'done') {
+      process.exit(0);
+    }
 
     // Tab: re-focus active input
     if (key.name === 'tab' && (step === 'name' || step === 'path' || step === 'stack-desc')) {

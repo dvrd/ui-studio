@@ -166,6 +166,36 @@ function inferPython(root: string): InferredPattern[] {
   return patterns;
 }
 
+function inferRust(root: string, stack: StackInfo): InferredPattern[] {
+  const patterns: InferredPattern[] = [];
+  const exts = ['.rs'];
+
+  const categories: Array<{ id: string; title: string; description: string; dirs: string[] }> = [
+    { id: 'handlers', title: 'HTTP Handlers', description: 'HTTP handler / route conventions', dirs: ['src/handlers', 'src/routes', 'src/api'] },
+    { id: 'services', title: 'Service Layer', description: 'Business logic conventions', dirs: ['src/services', 'src/domain'] },
+    { id: 'models', title: 'Domain Models', description: 'Domain types and models', dirs: ['src/models', 'src/types', 'src/entities'] },
+    { id: 'db', title: 'Database Layer', description: 'Database access conventions', dirs: ['src/db', 'src/repository', 'src/repositories'] },
+  ];
+
+  for (const cat of categories) {
+    for (const dir of cat.dirs) {
+      const files = walk(join(root, dir), exts, MAX_FILES_PER_CATEGORY);
+      if (files.length > 0) {
+        const examples = files.map(f => snippet(f, root)).join('\n\n---\n\n');
+        patterns.push({
+          id: cat.id,
+          title: cat.title,
+          description: cat.description,
+          content: `---\ndescription: ${cat.description}\n---\n\n# ${cat.title}\n\nInferred from existing code.\n\n\`\`\`rust\n${examples}\n\`\`\``,
+        });
+        break;
+      }
+    }
+  }
+
+  return patterns;
+}
+
 function inferDart(root: string): InferredPattern[] {
   const patterns: InferredPattern[] = [];
   const exts = ['.dart'];
@@ -204,6 +234,7 @@ export function inferPatterns(projectPath: string, stack: StackInfo): InferredPa
     case 'typescript': return inferTypeScript(projectPath, stack);
     case 'python':     return inferPython(projectPath);
     case 'dart':       return inferDart(projectPath);
+    case 'rust':       return inferRust(projectPath, stack);
     default:           return [];
   }
 }
