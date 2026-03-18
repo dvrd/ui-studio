@@ -43,7 +43,9 @@ func (s *AuthService) generateTokenPair(user *models.User) (access, refresh stri
 
     // Refresh token (random, stored in DB)
     refreshBytes := make([]byte, 32)
-    rand.Read(refreshBytes)
+    if _, err := rand.Read(refreshBytes); err != nil {
+        return "", "", fmt.Errorf("generate refresh token: %w", err)
+    }
     refresh = base64.URLEncoding.EncodeToString(refreshBytes)
 
     return access, refresh, nil

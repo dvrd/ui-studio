@@ -115,14 +115,27 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 type contextKey string
 const userContextKey contextKey = "user"
 
-func userIDFromContext(r *http.Request) uuid.UUID {
-    user, _ := r.Context().Value(userContextKey).(*models.User)
-    if user == nil {
-        return uuid.Nil
+// userFromContext extracts the authenticated user. Panics if called on a route
+// that does not have RequireAuth middleware — this is intentional: a missing
+// user in context is a programming error, not a runtime condition.
+func userFromContext(r *http.Request) *models.User {
+    user, ok := r.Context().Value(userContextKey).(*models.User)
+    if !ok || user == nil {
+        panic("userFromContext called on unauthenticated route — apply RequireAuth middleware")
     }
-    return user.ID
+    return user
+}
+
+// Convenience helper for handlers that only need the ID.
+func userIDFromContext(r *http.Request) uuid.UUID {
+    return userFromContext(r).ID
 }
 ```
+
+> **Never** return `uuid.Nil` silently — it propagates as a valid UUID into DB queries,
+> producing empty result sets with no visible error. Use `userFromContext` which panics
+> loudly on misconfiguration. `middleware.Recoverer` will catch the panic in production
+> and return a 500 rather than silently corrupting query results.
 
 ## Wiring in main.go
 

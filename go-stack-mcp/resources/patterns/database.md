@@ -32,7 +32,7 @@ package repositories
 import (
     "context"
     "fmt"
-    "github.com/jmoiern/sqlx"
+    "github.com/jmoiron/sqlx"
     "yourapp/internal/models"
 )
 

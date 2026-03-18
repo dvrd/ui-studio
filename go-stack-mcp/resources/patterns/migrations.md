@@ -57,10 +57,10 @@ import (
 // Run migrations at startup
 goose.SetBaseFS(migrations.Files)
 if err := goose.SetDialect("postgres"); err != nil {
-    log.Fatalf("set goose dialect: %v", err)
+	log.Fatalf("set goose dialect: %v", err)
 }
 if err := goose.Up(db.DB, "."); err != nil {
-    log.Fatalf("run migrations: %v", err)
+	log.Fatalf("run migrations: %v", err)
 }
 ```
 

@@ -14,7 +14,7 @@ go 1.25
 require (
     github.com/go-chi/chi/v5 v5.2.1
     github.com/jackc/pgx/v5 v5.7.2
-    github.com/jmoiern/sqlx v1.3.5
+    github.com/jmoiron/sqlx v1.3.5
     github.com/pressly/goose/v3 v3.24.1
     github.com/a-h/templ v0.3.833
     github.com/golang-jwt/jwt/v5 v5.2.1
@@ -117,7 +117,7 @@ import (
     "github.com/go-chi/chi/v5/middleware"
     "github.com/jackc/pgx/v5/pgxpool"
     "github.com/jackc/pgx/v5/stdlib"
-    "github.com/jmoiern/sqlx"
+    "github.com/jmoiron/sqlx"
     "github.com/pressly/goose/v3"
 
     "yourapp/internal/config"
@@ -139,7 +139,9 @@ func main() {
 
     // Migrations
     goose.SetBaseFS(migrations.Files)
-    goose.SetDialect("postgres")
+    if err := goose.SetDialect("postgres"); err != nil {
+        log.Fatalf("set goose dialect: %v", err)
+    }
     if err := goose.Up(db.DB, "."); err != nil {
         log.Fatalf("run migrations: %v", err)
     }
