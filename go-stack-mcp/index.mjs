@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { registerAllResources } from './lib/resources.mjs';
 
 const server = new McpServer({
-  name: '@go-studio/go-stack-mcp',
+  name: '@ui-studio/go-stack-mcp',
   version: '1.0.0',
 });
 

@@ -141,8 +141,7 @@ function registerEntries(server, category, uriScheme, entries) {
  * @returns {{ patterns: Array, guides: Array, foundations: Array }}
  */
 export function registerAllResources(server) {
-  const patterns = registerEntries(server, 'patterns', 'pattern', scanDirectory(join(RESOURCES_DIR, 'patterns')));
-  const guides = registerEntries(server, 'guides', 'guide', scanDirectory(join(RESOURCES_DIR, 'guides')));
+  const components = registerEntries(server, 'components', 'component', scanDirectory(join(RESOURCES_DIR, 'components')));
   const foundations = registerEntries(
     server,
     'foundations',
@@ -151,8 +150,8 @@ export function registerAllResources(server) {
   );
 
   console.error(
-    `✅ Registered ${patterns.length} patterns, ${guides.length} guides, ${foundations.length} foundations`
+    `✅ Registered ${components.length} components, ${foundations.length} foundations`
   );
 
-  return { patterns, guides, foundations };
+  return { components, foundations };
 }

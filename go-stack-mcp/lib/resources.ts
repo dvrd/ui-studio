@@ -129,7 +129,9 @@ export function registerAllResources(server: McpServer): ResourceCache {
     scanDirectory(join(RESOURCES_DIR, 'foundations'))
   );
 
-  console.error(`✅ Registered ${patterns.length} patterns, ${guides.length} guides, ${foundations.length} foundations`);
+  const parts = [`${patterns.length} patterns`, `${guides.length} guides`];
+  if (foundations.length > 0) parts.push(`${foundations.length} foundations`);
+  console.error(`✅ Registered ${parts.join(', ')}`);
 
   return { patterns, guides, foundations };
 }

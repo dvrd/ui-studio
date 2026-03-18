@@ -29,7 +29,7 @@ templUI provides shadcn/ui-style components for Templ. Using these instead of cu
         const result: Record<string, unknown> = {};
 
         if (category === 'all' || category === 'components') {
-          result.components = resourceCache.patterns;
+          result.components = resourceCache.components;
         }
         if (category === 'all' || category === 'foundations') {
           result.foundations = resourceCache.foundations;

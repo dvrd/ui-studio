@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { registerAllResources } from './lib/resources.mjs';
 
 const server = new McpServer({
-  name: '@go-studio/templui-mcp',
+  name: '@ui-studio/templui-mcp',
   version: '1.0.0',
 });
 
@@ -29,7 +29,7 @@ templUI provides shadcn/ui-style components for Templ. Using these instead of cu
         const result = {};
 
         if (category === 'all' || category === 'components') {
-          result.components = resourceCache.patterns;
+          result.components = resourceCache.components;
         }
         if (category === 'all' || category === 'foundations') {
           result.foundations = resourceCache.foundations;

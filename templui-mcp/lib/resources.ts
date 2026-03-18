@@ -114,14 +114,12 @@ function registerEntries(
 }
 
 export interface ResourceCache {
-  patterns: ResourceRef[];
-  guides: ResourceRef[];
+  components: ResourceRef[];
   foundations: ResourceRef[];
 }
 
 export function registerAllResources(server: McpServer): ResourceCache {
-  const patterns = registerEntries(server, 'patterns', 'pattern', scanDirectory(join(RESOURCES_DIR, 'patterns')));
-  const guides = registerEntries(server, 'guides', 'guide', scanDirectory(join(RESOURCES_DIR, 'guides')));
+  const components = registerEntries(server, 'components', 'component', scanDirectory(join(RESOURCES_DIR, 'components')));
   const foundations = registerEntries(
     server,
     'foundations',
@@ -129,7 +127,7 @@ export function registerAllResources(server: McpServer): ResourceCache {
     scanDirectory(join(RESOURCES_DIR, 'foundations'))
   );
 
-  console.error(`✅ Registered ${patterns.length} patterns, ${guides.length} guides, ${foundations.length} foundations`);
+  console.error(`✅ Registered ${components.length} components, ${foundations.length} foundations`);
 
-  return { patterns, guides, foundations };
+  return { components, foundations };
 }
