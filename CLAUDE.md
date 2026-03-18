@@ -17,7 +17,7 @@ Every client app is built with:
 - **Backend**: Go 1.25, chi v5 router, PostgreSQL (pgx/v5 + sqlx), Goose migrations
 - **Frontend**: Templ v0.3+, HTMX 2.x, Tailwind CSS v4, templUI v1.6
 - **Auth**: JWT + magic link + OAuth (Google/GitHub) + optional TOTP
-- **Payments**: Stripe + Polar
+- **Payments**: Stripe (pattern at `go-stack-mcp/resources/patterns/stripe-integration.md`)
 - **AI**: OpenRouter (LLM calls)
 - **Real-time**: SSE streaming
 - **Email**: Resend
@@ -32,13 +32,6 @@ Every client app is built with:
 - Goose migrations embedded in binary via `//go:embed`
 - Health check at `/health`
 - SSE endpoint at `/api/sse`
-
-## Navigator MCP
-
-Navigator is a passive graph walker for multi-step workflows.
-
-- Source of truth: `flow-navigator-mcp/resources/usage-guide.md`
-- Client copy: `plugins/go-studio/rules/navigator-usage.md`
 
 ## SessionStart Hook
 
