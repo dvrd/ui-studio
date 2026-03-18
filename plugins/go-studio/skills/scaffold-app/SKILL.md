@@ -30,7 +30,7 @@ assets/
 3. Write `go.mod` with dependencies:
    - `github.com/go-chi/chi/v5`
    - `github.com/jackc/pgx/v5`
-   - `github.com/jmoiern/sqlx`
+   - `github.com/jmoiron/sqlx`
    - `github.com/pressly/goose/v3`
    - `github.com/a-h/templ`
    - `github.com/golang-jwt/jwt/v5`
@@ -47,6 +47,7 @@ assets/
 8. Write `assets/app.css`:
 ```css
 @import "tailwindcss";
+@import "templui/styles";
 ```
 
 9. Write `package.json` for Tailwind tooling:

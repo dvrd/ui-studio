@@ -49,12 +49,12 @@ func NewAuthService(repo *repositories.AuthRepository, cfg *config.Config) *Auth
 
 ```go
 type AuthRepository struct {
-    db *pgxpool.Pool
+    db *sqlx.DB  // sqlx.DB wraps pgxpool via stdlib.OpenDBFromPool
 }
 
 func (r *AuthRepository) FindByEmail(ctx context.Context, email string) (*models.User, error) {
     var u models.User
-    err := sqlx.GetContext(ctx, r.db, &u, "SELECT * FROM users WHERE email=$1", email)
+    err := r.db.GetContext(ctx, &u, "SELECT * FROM users WHERE email=$1", email)
     if err != nil {
         return nil, fmt.Errorf("find user by email: %w", err)
     }
@@ -62,10 +62,16 @@ func (r *AuthRepository) FindByEmail(ctx context.Context, email string) (*models
 }
 ```
 
+Wire in `main.go`:
+```go
+pool, _ := pgxpool.New(ctx, cfg.DatabaseURL)
+db := sqlx.NewDb(stdlib.OpenDBFromPool(pool), "pgx")
+```
+
 - Always parameterized queries — no string concatenation
 - Always wrap errors with `fmt.Errorf("context: %w", err)`
 - Always `defer rows.Close()` after `Query`
-- Use `pgx/v5` pool directly; `sqlx` only for scan helpers
+- Repositories receive `*sqlx.DB`, not `*pgxpool.Pool` directly
 
 ### Error Handling
 

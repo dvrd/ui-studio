@@ -31,7 +31,7 @@ go-stack: list_resources({ category: "all" })
 For auth features:
 - `pattern://auth-jwt.md`
 - `pattern://auth-magic-link.md`
-- `pattern://auth-oauth.md`
+- `pattern://auth-oauth.md` (Google/GitHub OAuth)
 
 For database features:
 - `pattern://database.md`

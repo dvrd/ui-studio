@@ -22,7 +22,7 @@ Confirm with user before proceeding:
    - `go-stack: pattern://auth-jwt.md`
    - `go-stack: pattern://auth-magic-link.md`
    - `go-stack: pattern://auth-oauth.md` (if OAuth enabled)
-   - `go-stack: pattern://auth-totp.md` (if TOTP enabled)
+   - For TOTP: use `pquerna/otp` library — no dedicated pattern file yet, follow `go-stack: guide://review-checklists.md` security section
 
 2. Add dependencies to `go.mod`:
    - `github.com/golang-jwt/jwt/v5`
