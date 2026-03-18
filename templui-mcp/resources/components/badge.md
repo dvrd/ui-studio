@@ -25,19 +25,23 @@ description: Badge and status indicator components.
 
 ## In Templ with Dynamic Status
 
+Use a templ component — never `templ.Raw` with dynamic values (XSS risk):
+
 ```go
-func statusBadge(status string) templ.Component {
+templ StatusBadge(status string) {
     switch status {
     case "active":
-        return templ.Raw(`<span class="badge bg-green-100 text-green-800">Active</span>`)
+        <span class="badge bg-green-100 text-green-800">Active</span>
     case "draft":
-        return templ.Raw(`<span class="badge badge-secondary">Draft</span>`)
+        <span class="badge badge-secondary">Draft</span>
     case "failed":
-        return templ.Raw(`<span class="badge badge-destructive">Failed</span>`)
+        <span class="badge badge-destructive">Failed</span>
     default:
-        return templ.Raw(`<span class="badge badge-outline">` + status + `</span>`)
+        <span class="badge badge-outline">{ status }</span>
     }
 }
 ```
 
-Note: Use `templ.Raw` only for static strings you control — never for user input.
+Templ auto-escapes `{ status }` — safe even if the value comes from user input or the database.
+
+> **Never** use `templ.Raw(... + userValue + ...)` — it bypasses escaping and enables XSS.
