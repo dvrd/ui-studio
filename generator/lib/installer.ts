@@ -13,16 +13,25 @@ interface ClaudeSettings {
 
 function readSettings(): ClaudeSettings {
   if (!existsSync(SETTINGS_PATH)) return {};
+  const raw = readFileSync(SETTINGS_PATH, 'utf-8');
   try {
-    return JSON.parse(readFileSync(SETTINGS_PATH, 'utf-8'));
-  } catch {
-    return {};
+    return JSON.parse(raw);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`❌ ~/.claude/settings.json contains invalid JSON — aborting to avoid data loss.\n   Fix the file manually, then retry.\n   Error: ${msg}`);
+    process.exit(1);
   }
 }
 
 function writeSettings(settings: ClaudeSettings) {
-  mkdirSync(CLAUDE_DIR, { recursive: true });
-  writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2), 'utf-8');
+  try {
+    mkdirSync(CLAUDE_DIR, { recursive: true });
+    writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2), 'utf-8');
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`❌ Failed to write ~/.claude/settings.json: ${msg}`);
+    process.exit(1);
+  }
 }
 
 export interface InstallResult {
@@ -55,15 +64,21 @@ export function registerStudio(studioName: string, studioPath: string): InstallR
   };
 }
 
-export function unregisterStudio(studioName: string): boolean {
+export function unregisterStudio(studioName: string): { found: boolean; studioPath: string | null } {
   const mcpServerKey = `${studioName}-patterns`;
   const settings = readSettings();
 
-  if (!settings.mcpServers?.[mcpServerKey]) return false;
+  if (!settings.mcpServers?.[mcpServerKey]) return { found: false, studioPath: null };
+
+  // Extract the actual install path from the registered args before deleting
+  const entry = settings.mcpServers[mcpServerKey] as { args?: string[] } | undefined;
+  const mcpIndexPath = entry?.args?.[0] ?? null;
+  // args[0] is "<studioPath>/mcp/index.ts" — strip the "/mcp/index.ts" suffix
+  const studioPath = mcpIndexPath ? mcpIndexPath.replace(/\/mcp\/index\.ts$/, '') : null;
 
   delete settings.mcpServers[mcpServerKey];
   writeSettings(settings);
-  return true;
+  return { found: true, studioPath };
 }
 
 export function listRegisteredStudios(): string[] {

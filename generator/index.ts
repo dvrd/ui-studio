@@ -5,7 +5,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod';
 import { join } from 'path';
 import { homedir } from 'os';
-import { existsSync } from 'fs';
+import { existsSync, writeFileSync, mkdirSync } from 'fs';
 import { detectStack } from './lib/detector';
 import { inferPatterns } from './lib/inferrer';
 import { assembleStudio } from './lib/assembler';
@@ -38,6 +38,12 @@ After creation, the new studio MCP server is registered in ~/.claude/settings.js
   },
   async ({ name, project_path, stack_id, stack_description, user_conventions, install_dir }) => {
     const lines: string[] = [];
+
+    // Validate name to prevent path traversal and shell injection
+    if (!/^[a-z0-9-]+$/.test(name)) {
+      return { content: [{ type: 'text', text: `❌ Invalid studio name "${name}". Use only lowercase letters, numbers, and hyphens (e.g. "my-app-studio").` }] };
+    }
+
     const installBase = install_dir ?? DEFAULT_PLUGINS_DIR;
     const installPath = join(installBase, name);
 
@@ -82,13 +88,19 @@ After creation, the new studio MCP server is registered in ~/.claude/settings.js
     }
 
     // 2. Assemble studio files
-    const studioPath = assembleStudio({
-      name,
-      stack,
-      patterns: inferredPatterns,
-      installPath,
-      userDefinedConventions: user_conventions,
-    });
+    let studioPath: string;
+    try {
+      studioPath = assembleStudio({
+        name,
+        stack,
+        patterns: inferredPatterns,
+        installPath,
+        userDefinedConventions: user_conventions,
+      });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return { content: [{ type: 'text', text: `❌ Failed to assemble studio files: ${msg}` }] };
+    }
 
     lines.push(`\n📁 Studio assembled at: ${studioPath}`);
 
@@ -101,8 +113,7 @@ After creation, the new studio MCP server is registered in ~/.claude/settings.js
     }
 
     // 4. Install dependencies for the MCP server
-    const { spawnSync } = await import('bun');
-    const bunInstall = spawnSync(['bun', 'install'], { cwd: join(studioPath, 'mcp'), stdout: 'pipe', stderr: 'pipe' });
+    const bunInstall = Bun.spawnSync(['bun', 'install'], { cwd: join(studioPath, 'mcp'), stdout: 'pipe', stderr: 'pipe' });
     if (bunInstall.exitCode === 0) {
       lines.push(`📦 MCP server dependencies installed`);
     } else {
@@ -136,6 +147,10 @@ Use this after adding new code to the project — it refreshes the pattern libra
     install_dir: z.string().optional().describe(`Directory where studios are installed. Defaults to ${DEFAULT_PLUGINS_DIR}`),
   },
   async ({ name, project_path, install_dir }) => {
+    if (!/^[a-z0-9-]+$/.test(name)) {
+      return { content: [{ type: 'text', text: `❌ Invalid studio name "${name}". Use only lowercase letters, numbers, and hyphens.` }] };
+    }
+
     const installBase = install_dir ?? DEFAULT_PLUGINS_DIR;
     const studioPath = join(installBase, name);
 
@@ -153,7 +168,6 @@ Use this after adding new code to the project — it refreshes the pattern libra
     }
 
     const patterns = inferPatterns(project_path, stack);
-    const { writeFileSync, mkdirSync } = await import('fs');
 
     mkdirSync(join(studioPath, 'mcp', 'resources', 'patterns'), { recursive: true });
     for (const p of patterns) {
@@ -182,7 +196,12 @@ server.tool(
     if (studios.length === 0) {
       return { content: [{ type: 'text', text: 'No studios installed yet. Use create_studio to generate one.' }] };
     }
-    const lines = ['## Installed Studios', ...studios.map(s => `• ${s}`)];
+    // Strip the '-patterns' suffix to show the name used by create_studio / remove_studio
+    const lines = [
+      '## Installed Studios',
+      '(Use the name shown below with remove_studio or expand_studio)',
+      ...studios.map(s => `• ${s.replace(/-patterns$/, '')}`),
+    ];
     return { content: [{ type: 'text', text: lines.join('\n') }] };
   }
 );
@@ -196,9 +215,16 @@ server.tool(
     name: z.string().describe('Studio name to remove'),
   },
   async ({ name }) => {
-    const removed = unregisterStudio(name);
-    if (removed) {
-      return { content: [{ type: 'text', text: `✅ Studio "${name}" unregistered from ~/.claude/settings.json\n\nFiles remain at ${join(DEFAULT_PLUGINS_DIR, name)} — delete manually if needed.` }] };
+    if (!/^[a-z0-9-]+$/.test(name)) {
+      return { content: [{ type: 'text', text: `❌ Invalid studio name "${name}". Use only lowercase letters, numbers, and hyphens.` }] };
+    }
+
+    const { found, studioPath } = unregisterStudio(name);
+    if (found) {
+      const pathMsg = studioPath
+        ? `Files remain at ${studioPath} — delete manually if needed.`
+        : `Run \`find ~/.claude/plugins -name "${name}" -type d\` to locate the files.`;
+      return { content: [{ type: 'text', text: `✅ Studio "${name}" unregistered from ~/.claude/settings.json\n\n${pathMsg}` }] };
     }
     return { content: [{ type: 'text', text: `⚠️  Studio "${name}" was not registered.` }] };
   }

@@ -25,8 +25,13 @@ export interface StudioConfig {
 }
 
 function write(path: string, content: string) {
-  mkdirSync(join(path, '..'), { recursive: true });
-  writeFileSync(path, content, 'utf-8');
+  try {
+    mkdirSync(join(path, '..'), { recursive: true });
+    writeFileSync(path, content, 'utf-8');
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new Error(`Failed to write ${path}: ${msg}`);
+  }
 }
 
 export function assembleStudio(config: StudioConfig): string {

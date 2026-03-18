@@ -24,10 +24,13 @@ function walk(dir: string, exts: string[], max: number): string[] {
 
   const scan = (d: string) => {
     if (results.length >= max) return;
-    for (const name of readdirSync(d)) {
+    let names: string[];
+    try { names = readdirSync(d); } catch { return; }
+    for (const name of names) {
       if (IGNORED_DIRS.has(name)) continue;
       const full = join(d, name);
-      const stat = statSync(full);
+      let stat: ReturnType<typeof statSync>;
+      try { stat = statSync(full); } catch { continue; }
       if (stat.isDirectory()) {
         scan(full);
       } else if (exts.includes(extname(name)) && results.length < max) {
@@ -40,14 +43,16 @@ function walk(dir: string, exts: string[], max: number): string[] {
   return results;
 }
 
-function snippet(filePath: string, root: string): string {
-  const raw = readFileSync(filePath, 'utf-8');
+function snippet(filePath: string, root: string): string | null {
+  let raw: string;
+  try { raw = readFileSync(filePath, 'utf-8'); } catch { return null; }
   const body = raw.length > MAX_CHARS_PER_FILE ? raw.slice(0, MAX_CHARS_PER_FILE) + '\n// ... (truncated)' : raw;
   return `// ${relative(root, filePath)}\n${body}`;
 }
 
-function pySnippet(filePath: string, root: string): string {
-  const raw = readFileSync(filePath, 'utf-8');
+function pySnippet(filePath: string, root: string): string | null {
+  let raw: string;
+  try { raw = readFileSync(filePath, 'utf-8'); } catch { return null; }
   const body = raw.length > MAX_CHARS_PER_FILE ? raw.slice(0, MAX_CHARS_PER_FILE) + '\n# ... (truncated)' : raw;
   return `# ${relative(root, filePath)}\n${body}`;
 }
@@ -74,7 +79,8 @@ function inferGo(root: string, stack: StackInfo): InferredPattern[] {
     for (const dir of cat.dirs) {
       const files = walk(join(root, dir), exts, MAX_FILES_PER_CATEGORY);
       if (files.length > 0) {
-        const examples = files.map(f => snippet(f, root)).join('\n\n---\n\n');
+        const examples = files.map(f => snippet(f, root)).filter((s): s is string => s !== null).join('\n\n---\n\n');
+        if (!examples) break;
         patterns.push({
           id: cat.id,
           title: cat.title,
@@ -91,7 +97,8 @@ function inferGo(root: string, stack: StackInfo): InferredPattern[] {
   for (const dir of migDirs) {
     const files = walk(join(root, dir), ['.sql'], MAX_FILES_PER_CATEGORY);
     if (files.length > 0) {
-      const examples = files.map(f => `-- ${relative(root, f)}\n${readFileSync(f, 'utf-8').slice(0, 1500)}`).join('\n\n---\n\n');
+      const examples = files.map(f => { try { return `-- ${relative(root, f)}\n${readFileSync(f, 'utf-8').slice(0, 1500)}`; } catch { return null; } }).filter((s): s is string => s !== null).join('\n\n---\n\n');
+      if (!examples) break;
       patterns.push({
         id: 'migrations',
         title: 'Database Migrations',
@@ -121,7 +128,8 @@ function inferTypeScript(root: string, stack: StackInfo): InferredPattern[] {
     for (const dir of cat.dirs) {
       const files = walk(join(root, dir), exts, MAX_FILES_PER_CATEGORY);
       if (files.length > 0) {
-        const examples = files.map(f => snippet(f, root)).join('\n\n---\n\n');
+        const examples = files.map(f => snippet(f, root)).filter((s): s is string => s !== null).join('\n\n---\n\n');
+        if (!examples) break;
         patterns.push({
           id: cat.id,
           title: cat.title,
@@ -151,7 +159,8 @@ function inferPython(root: string): InferredPattern[] {
     for (const dir of cat.dirs) {
       const files = walk(join(root, dir), exts, MAX_FILES_PER_CATEGORY);
       if (files.length > 0) {
-        const examples = files.map(f => pySnippet(f, root)).join('\n\n---\n\n');
+        const examples = files.map(f => pySnippet(f, root)).filter((s): s is string => s !== null).join('\n\n---\n\n');
+        if (!examples) break;
         patterns.push({
           id: cat.id,
           title: cat.title,
@@ -181,7 +190,8 @@ function inferRust(root: string, stack: StackInfo): InferredPattern[] {
     for (const dir of cat.dirs) {
       const files = walk(join(root, dir), exts, MAX_FILES_PER_CATEGORY);
       if (files.length > 0) {
-        const examples = files.map(f => snippet(f, root)).join('\n\n---\n\n');
+        const examples = files.map(f => snippet(f, root)).filter((s): s is string => s !== null).join('\n\n---\n\n');
+        if (!examples) break;
         patterns.push({
           id: cat.id,
           title: cat.title,
@@ -211,7 +221,8 @@ function inferDart(root: string): InferredPattern[] {
     for (const dir of cat.dirs) {
       const files = walk(join(root, dir), exts, MAX_FILES_PER_CATEGORY);
       if (files.length > 0) {
-        const examples = files.map(f => snippet(f, root)).join('\n\n---\n\n');
+        const examples = files.map(f => snippet(f, root)).filter((s): s is string => s !== null).join('\n\n---\n\n');
+        if (!examples) break;
         patterns.push({
           id: cat.id,
           title: cat.title,

@@ -126,12 +126,19 @@ const DETECTORS: Detector[] = [
         : content.includes('flask') ? 'flask'
         : 'stdlib';
 
+      const features: string[] = [];
+      if (content.includes('sqlalchemy')) features.push('sqlalchemy');
+      if (content.includes('stripe')) features.push('stripe');
+      if (content.includes('celery')) features.push('celery');
+      if (content.includes('pydantic')) features.push('pydantic');
+      if (content.includes('alembic')) features.push('alembic');
+
       return {
         name: `Python + ${fw.charAt(0).toUpperCase() + fw.slice(1)}`,
         id: `python-${fw}`,
         language: 'python',
         framework: fw,
-        features: [],
+        features,
         sourceExts: ['.py'],
       };
     },

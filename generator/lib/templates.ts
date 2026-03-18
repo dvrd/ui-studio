@@ -114,7 +114,7 @@ export function hooksJson(v: StudioVars): string {
   return JSON.stringify({
     hooks: {
       SessionStart: [{
-        matcher: 'startup|resume|clear|compact',
+        matcher: '',
         hooks: [{
           type: 'command',
           command: `bun "\${CLAUDE_PLUGIN_ROOT}/hooks/session-start.ts"`,
@@ -231,12 +231,15 @@ async function startServer() {
 
 Returns available patterns inferred from this project's codebase. These are the actual conventions used here — not generic advice.\`,
       {
-        category: z.enum(['patterns', 'all']).optional().describe('Filter by category (default: all)'),
+        category: z.enum(['patterns', 'guides', 'all']).optional().describe('Filter by category (default: all)'),
       },
       async ({ category = 'all' }) => {
         const result: Record<string, unknown> = {};
         if (category === 'all' || category === 'patterns') {
           result.patterns = resourceCache.patterns;
+        }
+        if (category === 'all' || category === 'guides') {
+          result.guides = resourceCache.guides;
         }
         return {
           content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }],
@@ -307,7 +310,8 @@ function scanDirectory(dirPath: string): ResourceEntry[] {
 
   for (const name of readdirSync(dirPath)) {
     const fullPath = join(dirPath, name);
-    const stat = statSync(fullPath);
+    let stat: ReturnType<typeof statSync>;
+    try { stat = statSync(fullPath); } catch { continue; }
 
     if (stat.isDirectory()) {
       for (const subName of readdirSync(fullPath)) {
@@ -342,8 +346,10 @@ function registerEntries(server: McpServer, category: string, uriScheme: string,
 
 export function registerAllResources(server: McpServer) {
   const patterns = registerEntries(server, 'patterns', 'pattern', scanDirectory(join(RESOURCES_DIR, 'patterns')));
-  console.error(\`✅ Registered \${patterns.length} patterns\`);
-  return { patterns };
+  const guides = registerEntries(server, 'guides', 'guide', scanDirectory(join(RESOURCES_DIR, 'guides')));
+  const foundations = registerEntries(server, 'foundations', 'foundation', scanDirectory(join(RESOURCES_DIR, 'foundations')));
+  console.error(\`✅ Registered \${patterns.length} patterns, \${guides.length} guides, \${foundations.length} foundations\`);
+  return { patterns, guides, foundations };
 }
 `;
 }
