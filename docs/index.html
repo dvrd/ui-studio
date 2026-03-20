@@ -11,42 +11,39 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --cream:       #faf7f2;
-      --cream-2:     #f2ede4;
-      --cream-3:     #e8e0d4;
-      --ink:         #171310;
-      --ink-2:       #4a4440;
-      --ink-3:       #8a8078;
-      --orange:      #c95c1e;
-      --orange-l:    #e07545;
-      --teal:        #0c6e65;
-      --black:       #0c0b09;
-      --white:       #fefdfb;
+      --bg:       #080808;
+      --bg-2:     #0f0f0f;
+      --bg-3:     #181818;
+      --border:   #202020;
+      --border-2: #2e2e2e;
+      --text:     #f0f0f0;
+      --text-2:   #888;
+      --text-3:   #444;
+      --lime:     #c8ff00;
+      --blue:     #4d8bff;
+      --green:    #22c55e;
 
-      --f-display: 'Cormorant', Georgia, serif;
-      --f-mono:    'JetBrains Mono', 'Courier New', monospace;
-      --f-body:    'DM Sans', system-ui, sans-serif;
+      --f-sans: 'Space Grotesk', system-ui, sans-serif;
+      --f-mono: 'JetBrains Mono', monospace;
 
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; font-size: 16px; }
-
     body {
-      background: var(--cream);
-      color: var(--ink);
-      font-family: var(--f-body);
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--f-sans);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── NAV ────────────────────────────────────────── */
+    /* ─── NAV ──────────────────────────────────── */
     nav {
       position: fixed;
       inset: 0 0 auto;
@@ -54,65 +51,66 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.4rem 3.5rem;
-      transition: background 0.3s, box-shadow 0.3s;
+      padding: 1.25rem 3rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, background 0.3s;
     }
-
     nav.scrolled {
-      background: rgba(250,247,242,0.94);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 1px 0 rgba(23,19,16,0.08);
+      background: rgba(8,8,8,0.92);
+      backdrop-filter: blur(16px);
+      border-color: var(--border);
     }
 
     .nav-logo {
       font-family: var(--f-mono);
-      font-size: 0.82rem;
-      font-weight: 400;
-      letter-spacing: 0.04em;
-      color: var(--ink);
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--text);
       text-decoration: none;
     }
-    .nav-logo b { color: var(--orange); font-weight: 500; }
+    .nav-logo span { color: var(--lime); }
 
-    .nav-center {
+    .nav-links {
       display: flex;
       gap: 2.5rem;
     }
-    .nav-center a {
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
+    .nav-links a {
+      font-family: var(--f-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--ink-3);
+      color: var(--text-3);
       text-decoration: none;
       transition: color 0.2s;
     }
-    .nav-center a:hover { color: var(--ink); }
+    .nav-links a:hover { color: var(--text); }
 
     .nav-cta {
       font-family: var(--f-mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.04em;
-      padding: 0.6rem 1.5rem;
-      background: var(--ink);
-      color: var(--cream);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 0.55rem 1.25rem;
+      background: var(--lime);
+      color: #000;
       text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
-      display: inline-block;
+      transition: opacity 0.2s, transform 0.15s;
     }
-    .nav-cta:hover { background: var(--orange); transform: translateY(-1px); }
+    .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
 
-    /* ─── HERO ───────────────────────────────────────── */
+    /* ─── HERO ─────────────────────────────────── */
     .hero {
       min-height: 100svh;
       display: grid;
       grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
       position: relative;
       overflow: hidden;
     }
 
     .hero-left {
-      padding: 12rem 4rem 6rem 3.5rem;
+      padding: 11rem 3.5rem 6rem 3rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -120,579 +118,591 @@
       z-index: 1;
     }
 
-    .hero-right {
-      background: var(--cream-2);
-      padding: 10rem 3.5rem 4rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      clip-path: polygon(8% 0, 100% 0, 100% 100%, 0% 100%);
-      position: relative;
-    }
-
-    .hero-eyebrow {
+    .hero-label {
       font-family: var(--f-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: var(--orange);
-      margin-bottom: 2rem;
+      color: var(--text-3);
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
       opacity: 0;
-      transform: translateY(16px);
-      animation: rise 0.7s var(--ease-out) 0.2s forwards;
+      animation: fade-up 0.6s var(--ease-out) 0.1s forwards;
+    }
+    .hero-label::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--lime);
+      flex-shrink: 0;
     }
 
     .hero-h1 {
-      font-family: var(--f-display);
-      font-size: clamp(4.5rem, 6.5vw, 7.5rem);
-      font-weight: 600;
-      line-height: 0.95;
-      letter-spacing: -0.025em;
-      margin-bottom: 2.2rem;
+      font-size: clamp(4.5rem, 7.5vw, 9.5rem);
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      margin-bottom: 3rem;
       opacity: 0;
-      transform: translateY(20px);
-      animation: rise 0.8s var(--ease-out) 0.35s forwards;
+      animation: fade-up 0.8s var(--ease-out) 0.25s forwards;
     }
-
-    .hero-h1 em {
-      font-style: italic;
-      color: var(--orange);
+    .hero-h1 .outline {
+      -webkit-text-stroke: 1.5px var(--text);
+      color: transparent;
+      display: block;
+    }
+    .hero-h1 .solid {
+      color: var(--lime);
       display: block;
     }
 
-    .hero-p {
-      font-size: 1rem;
-      line-height: 1.75;
-      color: var(--ink-2);
-      max-width: 420px;
+    .hero-sub {
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: var(--text-2);
+      max-width: 400px;
       margin-bottom: 3rem;
+      font-weight: 400;
       opacity: 0;
-      transform: translateY(16px);
-      animation: rise 0.7s var(--ease-out) 0.55s forwards;
+      animation: fade-up 0.7s var(--ease-out) 0.45s forwards;
     }
+    .hero-sub strong { color: var(--text); font-weight: 500; }
 
-    .hero-btns {
+    .hero-actions {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
+      align-items: center;
       flex-wrap: wrap;
       opacity: 0;
-      transform: translateY(12px);
-      animation: rise 0.7s var(--ease-out) 0.7s forwards;
+      animation: fade-up 0.7s var(--ease-out) 0.6s forwards;
     }
 
-    .btn-fill {
+    .btn-primary {
       font-family: var(--f-mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.03em;
-      padding: 0.9rem 2rem;
-      background: var(--ink);
-      color: var(--cream);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.9rem 1.8rem;
+      background: var(--lime);
+      color: #000;
       text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
-      display: inline-block;
+      transition: opacity 0.2s, transform 0.15s;
+      white-space: nowrap;
     }
-    .btn-fill:hover { background: var(--orange); transform: translateY(-1px); }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
 
-    .btn-ghost {
+    .btn-secondary {
       font-family: var(--f-mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.03em;
-      padding: 0.9rem 2rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      padding: 0.9rem 1.8rem;
       background: transparent;
-      color: var(--ink-3);
-      border: 1px solid var(--cream-3);
+      color: var(--text-3);
+      border: 1px solid var(--border-2);
       text-decoration: none;
       transition: border-color 0.2s, color 0.2s;
-      display: inline-block;
     }
-    .btn-ghost:hover { border-color: var(--ink-2); color: var(--ink); }
+    .btn-secondary:hover { border-color: var(--text-3); color: var(--text-2); }
 
-    /* Terminal */
+    /* ─── TERMINAL ──────────────────────────────── */
+    .hero-right {
+      border-left: 1px solid var(--border);
+      background: var(--bg-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10rem 3rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
     .term {
-      background: #0d1117;
-      border-radius: 5px;
-      overflow: hidden;
-      box-shadow: 0 32px 64px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.04);
-      opacity: 0;
-      transform: translateY(24px);
-      animation: rise 1s var(--ease-out) 0.9s forwards;
+      background: #060810;
+      border: 1px solid var(--border-2);
       width: 100%;
-      max-width: 540px;
-      margin-left: auto;
+      max-width: 520px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fade-up 1s var(--ease-out) 0.8s forwards;
     }
 
     .term-bar {
-      background: #161b22;
-      padding: 0.65rem 1rem;
+      background: #0c0e14;
+      padding: 0.7rem 1rem;
       display: flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
     }
-    .term-dot {
-      width: 11px; height: 11px;
-      border-radius: 50%;
-    }
+    .term-dot { width: 10px; height: 10px; border-radius: 50%; }
     .term-dot:nth-child(1) { background: #ff5f57; }
     .term-dot:nth-child(2) { background: #febc2e; }
     .term-dot:nth-child(3) { background: #28c840; }
     .term-title {
       font-family: var(--f-mono);
-      font-size: 0.68rem;
-      color: #4d5566;
+      font-size: 0.65rem;
+      color: var(--text-3);
       margin: 0 auto;
+      letter-spacing: 0.05em;
     }
 
     .term-body {
       padding: 1.4rem 1.6rem;
       font-family: var(--f-mono);
-      font-size: 0.76rem;
-      line-height: 1.9;
-      min-height: 300px;
+      font-size: 0.74rem;
+      line-height: 1.85;
+      min-height: 280px;
       overflow: hidden;
     }
 
     .tl { display: block; }
-    .tc-prompt { color: #3b82f6; }
-    .tc-cmd    { color: #e6edf3; }
-    .tc-ok     { color: #22c55e; }
-    .tc-info   { color: #58a6ff; }
-    .tc-warn   { color: #eab308; }
-    .tc-accent { color: #e07545; }
-    .tc-muted  { color: #4d5566; }
+    .tc-prompt { color: var(--lime); }
+    .tc-cmd    { color: var(--text); }
+    .tc-ok     { color: var(--green); }
+    .tc-info   { color: var(--blue); }
+    .tc-accent { color: var(--lime); }
+    .tc-muted  { color: var(--text-3); }
 
     .cursor {
       display: inline-block;
       width: 7px; height: 13px;
-      background: #3b82f6;
+      background: var(--lime);
       vertical-align: text-bottom;
       animation: blink 1.1s step-end infinite;
     }
-
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-    /* ─── TICKER ─────────────────────────────────────── */
+    /* ─── TICKER ────────────────────────────────── */
     .ticker {
-      background: var(--ink);
-      padding: 0.9rem 0;
+      background: var(--lime);
+      padding: 0.8rem 0;
       overflow: hidden;
       white-space: nowrap;
     }
     .ticker-row {
       display: inline-flex;
-      animation: marquee 28s linear infinite;
+      animation: marquee 24s linear infinite;
     }
     .ti {
       font-family: var(--f-mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(250,247,242,0.3);
-      padding: 0 2.8rem;
+      color: rgba(0,0,0,0.4);
+      padding: 0 2.5rem;
     }
-    .ti.hot { color: var(--orange-l); }
+    .ti.hot { color: rgba(0,0,0,0.85); font-weight: 600; }
     @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-    /* ─── SECTION SCAFFOLD ───────────────────────────── */
-    .section-wrap {
-      max-width: 1380px;
+    /* ─── SHARED ────────────────────────────────── */
+    .wrap {
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 0 3.5rem;
+      padding: 0 3rem;
     }
 
-    .tag {
+    .section-label {
       font-family: var(--f-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.28em;
+      font-size: 0.6rem;
+      letter-spacing: 0.32em;
       text-transform: uppercase;
-      color: var(--ink-3);
+      color: var(--text-3);
       display: flex;
       align-items: center;
-      gap: 1.2rem;
+      gap: 1rem;
       margin-bottom: 5rem;
     }
-    .tag::after {
+    .section-label::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: currentColor;
-      opacity: 0.2;
+      background: var(--border);
     }
 
-    /* ─── STEPS ──────────────────────────────────────── */
-    .how { padding: 9rem 0; }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .step {
-      padding: 3.5rem 3rem;
-      border-left: 1px solid rgba(23,19,16,0.1);
-    }
-    .step:first-child { border-left: none; padding-left: 0; }
-
-    .step-n {
-      font-family: var(--f-display);
-      font-size: 5rem;
-      font-weight: 300;
-      line-height: 1;
-      color: var(--orange);
-      opacity: 0.5;
-      margin-bottom: 1.8rem;
-    }
-    .step-title {
-      font-family: var(--f-display);
-      font-size: 1.65rem;
-      font-weight: 500;
-      line-height: 1.2;
-      margin-bottom: 0.9rem;
-    }
-    .step-p {
-      font-size: 0.88rem;
-      line-height: 1.8;
-      color: var(--ink-2);
-      margin-bottom: 1.5rem;
-    }
-    .code-pill {
-      font-family: var(--f-mono);
-      font-size: 0.7rem;
-      background: var(--ink);
-      color: var(--cream-2);
-      padding: 0.6rem 1rem;
-      letter-spacing: 0.02em;
-      display: inline-block;
-    }
-    .code-pill .ok { color: #22c55e; }
-
-    /* reveal */
     .reveal {
       opacity: 0;
-      transform: translateY(28px);
+      transform: translateY(24px);
       transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
     }
     .reveal.in { opacity: 1; transform: translateY(0); }
 
-    /* ─── DARK SHOWCASE ──────────────────────────────── */
-    .dark-section {
-      background: var(--black);
+    /* ─── HOW ───────────────────────────────────── */
+    .how {
       padding: 9rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-left: 1px solid var(--border);
+    }
+
+    .step {
+      padding: 3.5rem 3rem;
+      border-right: 1px solid var(--border);
+      border-top: 1px solid var(--border);
+    }
+
+    .step-n {
+      font-family: var(--f-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      color: var(--lime);
+      margin-bottom: 2.5rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .step-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      letter-spacing: -0.025em;
+    }
+
+    .step-p {
+      font-size: 0.84rem;
+      line-height: 1.8;
+      color: var(--text-2);
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
+
+    .code-chip {
+      font-family: var(--f-mono);
+      font-size: 0.68rem;
+      background: var(--bg-3);
+      color: var(--text-2);
+      padding: 0.7rem 1rem;
+      border: 1px solid var(--border);
+      display: inline-block;
+      letter-spacing: 0.02em;
+    }
+    .code-chip .ok  { color: var(--green); }
+    .code-chip .acc { color: var(--lime); }
+
+    /* ─── SHOWCASE ──────────────────────────────── */
+    .showcase {
+      background: var(--bg-2);
+      padding: 9rem 0;
+      border-bottom: 1px solid var(--border);
       position: relative;
       overflow: hidden;
     }
 
-    .dark-bg-word {
+    .bg-word {
       position: absolute;
-      right: -3rem; bottom: -6rem;
-      font-family: var(--f-display);
+      right: -2rem; bottom: -4rem;
       font-size: 22vw;
       font-weight: 700;
-      color: rgba(255,255,255,0.025);
+      color: rgba(200,255,0,0.025);
       line-height: 1;
       pointer-events: none;
       user-select: none;
+      letter-spacing: -0.04em;
     }
 
-    .dark-grid {
+    .showcase-grid {
       display: grid;
       grid-template-columns: 2fr 3fr;
-      gap: 7rem;
-      align-items: start;
+      gap: 6rem;
+      align-items: center;
       position: relative;
       z-index: 1;
     }
 
-    .dark-tag { color: rgba(255,255,255,0.25); }
-    .dark-tag::after { background: rgba(255,255,255,0.12); opacity: 1; }
-
-    .dark-h2 {
-      font-family: var(--f-display);
-      font-size: clamp(2.8rem, 4vw, 4.5rem);
-      font-weight: 500;
-      color: var(--white);
-      line-height: 1.08;
-      margin-bottom: 2rem;
+    .showcase-h2 {
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
     }
-    .dark-h2 em { font-style: italic; color: var(--orange-l); }
+    .showcase-h2 span { color: var(--lime); }
 
-    .dark-p {
-      font-size: 0.9rem;
+    .showcase-p {
+      font-size: 0.88rem;
       line-height: 1.8;
-      color: rgba(255,255,255,0.4);
+      color: var(--text-2);
       margin-bottom: 2.5rem;
     }
 
     .feat-list { list-style: none; }
     .feat-list li {
-      font-size: 0.84rem;
-      color: rgba(255,255,255,0.55);
+      font-size: 0.82rem;
+      color: var(--text-2);
       line-height: 1.6;
-      padding: 0.65rem 0;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 0.7rem 0;
+      border-top: 1px solid var(--border);
       display: flex;
-      gap: 0.9rem;
+      gap: 1rem;
     }
-    .feat-list li:last-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .feat-list li:last-child { border-bottom: 1px solid var(--border); }
     .feat-list li::before {
       content: '→';
-      color: var(--orange-l);
+      color: var(--lime);
       font-family: var(--f-mono);
       flex-shrink: 0;
     }
 
     .showcase-term {
-      background: #0d1117;
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 6px;
+      background: #060810;
+      border: 1px solid var(--border-2);
       overflow: hidden;
-    }
-
-    .showcase-term pre {
-      font-family: var(--f-mono);
-      font-size: 0.74rem;
-      line-height: 1.55;
-      color: #8b949e;
-      padding: 1.6rem 1.8rem;
-      white-space: pre;
-      overflow-x: auto;
     }
 
     .tui-box {
       font-family: var(--f-mono);
-      font-size: 0.74rem;
-      line-height: 1.55;
-      color: #8b949e;
+      font-size: 0.72rem;
+      line-height: 1.6;
+      color: #666;
       padding: 1.6rem 1.8rem;
-      box-sizing: border-box;
     }
-    .tui-box table {
-      border-collapse: collapse;
-      width: 100%;
-    }
-    .tui-row {
-      display: flex;
-      align-items: baseline;
-    }
-    .tui-border-v {
-      color: #3b4250;
-      flex-shrink: 0;
-      user-select: none;
-    }
-    .tui-cell {
-      flex: 1;
-      min-width: 0;
-    }
-    .tui-divider {
-      color: #3b4250;
-    }
-    .tui-hr {
-      color: #3b4250;
-      display: block;
-      letter-spacing: -0.05em;
-    }
+    .tui-row { display: flex; align-items: baseline; }
+    .tui-border-v { color: #252830; flex-shrink: 0; user-select: none; }
+    .tui-cell { flex: 1; min-width: 0; }
+    .tui-divider { color: #252830; }
 
-    /* ─── STACK GRID ─────────────────────────────────── */
-    .stacks-section { padding: 9rem 0; }
+    /* ─── STACKS ────────────────────────────────── */
+    .stacks {
+      padding: 9rem 0;
+      border-bottom: 1px solid var(--border);
+    }
 
     .stacks-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 2px;
-      background: rgba(23,19,16,0.1);
+      border-left: 1px solid var(--border);
+      border-top: 1px solid var(--border);
     }
 
     .stack-card {
-      background: var(--cream);
-      padding: 2.8rem 2.2rem;
-      transition: background 0.25s;
-    }
-    .stack-card:hover { background: var(--cream-2); }
-
-    .stack-id {
-      font-family: var(--f-mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--orange);
-      margin-bottom: 1.1rem;
-    }
-    .stack-name {
-      font-family: var(--f-display);
-      font-size: 1.45rem;
-      font-weight: 500;
-      line-height: 1.2;
-      margin-bottom: 0.5rem;
-    }
-    .stack-desc {
-      font-size: 0.8rem;
-      color: var(--ink-3);
-      line-height: 1.7;
-    }
-
-    /* ─── CTA ────────────────────────────────────────── */
-    .cta-section {
-      background: var(--orange);
-      padding: 9rem 3.5rem;
-      text-align: center;
+      padding: 2.5rem 2rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
       position: relative;
       overflow: hidden;
     }
-    .cta-watermark {
+    .stack-card:hover { background: var(--bg-2); }
+    .stack-card:hover .stack-arrow { opacity: 1; transform: translate(0, 0); }
+
+    .stack-id {
+      font-family: var(--f-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 1.25rem;
+      font-weight: 500;
+    }
+
+    .stack-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 0.65rem;
+      letter-spacing: -0.02em;
+    }
+
+    .stack-desc {
+      font-size: 0.77rem;
+      color: var(--text-2);
+      line-height: 1.7;
+    }
+
+    .stack-arrow {
+      position: absolute;
+      top: 2rem; right: 2rem;
+      font-family: var(--f-mono);
+      font-size: 0.7rem;
+      color: var(--lime);
+      opacity: 0;
+      transform: translate(-4px, 4px);
+      transition: all 0.2s var(--ease-out);
+    }
+
+    /* ─── CTA ───────────────────────────────────── */
+    .cta {
+      padding: 10rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cta-word {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      font-family: var(--f-display);
       font-size: 28vw;
       font-weight: 700;
-      color: rgba(0,0,0,0.06);
+      color: rgba(200,255,0,0.025);
+      letter-spacing: -0.05em;
       white-space: nowrap;
       pointer-events: none;
       user-select: none;
       line-height: 1;
     }
-    .cta-tag {
+
+    .cta-label {
       font-family: var(--f-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.28em;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: rgba(0,0,0,0.4);
+      color: var(--text-3);
       margin-bottom: 2rem;
-    }
-    .cta-h2 {
-      font-family: var(--f-display);
-      font-size: clamp(3.5rem, 6.5vw, 7rem);
-      font-weight: 600;
-      color: #fff;
-      line-height: 1;
-      margin-bottom: 3.5rem;
-      letter-spacing: -0.02em;
-    }
-    .install-box {
-      display: inline-flex;
-      align-items: center;
-      gap: 1.2rem;
-      background: rgba(0,0,0,0.14);
-      border: 1px solid rgba(255,255,255,0.25);
-      padding: 1rem 1.6rem;
-      margin-bottom: 3rem;
-      cursor: pointer;
-      transition: background 0.2s;
       position: relative;
       z-index: 1;
     }
-    .install-box:hover { background: rgba(0,0,0,0.22); }
+
+    .cta-h2 {
+      font-size: clamp(3.5rem, 7vw, 8.5rem);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      margin-bottom: 4rem;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-h2 span { color: var(--lime); }
+
+    .install-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--bg-3);
+      border: 1px solid var(--border-2);
+      padding: 1rem 1.5rem;
+      margin-bottom: 2.5rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+    .install-box:hover { border-color: var(--lime); }
     .install-box code {
       font-family: var(--f-mono);
-      font-size: 0.84rem;
-      color: #fff;
-      letter-spacing: 0.02em;
+      font-size: 0.82rem;
+      color: var(--text);
+      letter-spacing: 0.01em;
     }
-    .install-box .copy-hint {
+    .copy-hint {
       font-family: var(--f-mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.12em;
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
+      color: var(--text-3);
     }
+
     .cta-btns {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
       justify-content: center;
       position: relative;
       z-index: 1;
     }
+
     .btn-dark {
       font-family: var(--f-mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.03em;
-      padding: 0.9rem 2rem;
-      background: var(--ink);
-      color: var(--cream);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.9rem 1.8rem;
+      background: var(--lime);
+      color: #000;
       text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
+      transition: opacity 0.2s, transform 0.15s;
     }
-    .btn-dark:hover { background: #000; transform: translateY(-1px); }
-    .btn-stroke {
+    .btn-dark:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .btn-outline {
       font-family: var(--f-mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.03em;
-      padding: 0.9rem 2rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      padding: 0.9rem 1.8rem;
       background: transparent;
-      color: rgba(0,0,0,0.65);
-      border: 1px solid rgba(0,0,0,0.3);
+      color: var(--text-3);
+      border: 1px solid var(--border-2);
       text-decoration: none;
       transition: border-color 0.2s, color 0.2s;
     }
-    .btn-stroke:hover { border-color: rgba(0,0,0,0.65); color: var(--ink); }
+    .btn-outline:hover { border-color: var(--text-3); color: var(--text-2); }
 
-    /* ─── FOOTER ─────────────────────────────────────── */
+    /* ─── FOOTER ────────────────────────────────── */
     footer {
-      background: var(--black);
-      padding: 3.5rem 3.5rem;
+      padding: 2.5rem 3rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 2rem;
     }
+
     .foot-logo {
       font-family: var(--f-mono);
-      font-size: 0.8rem;
-      color: rgba(250,247,242,0.3);
-      letter-spacing: 0.05em;
+      font-size: 0.75rem;
+      color: var(--text-3);
+      letter-spacing: 0.06em;
     }
-    .foot-logo b { color: var(--orange-l); }
-    .foot-links { display: flex; gap: 2.5rem; }
+    .foot-logo span { color: var(--lime); }
+
+    .foot-links { display: flex; gap: 2rem; }
     .foot-links a {
       font-family: var(--f-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
+      font-size: 0.63rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: rgba(250,247,242,0.2);
+      color: var(--text-3);
       text-decoration: none;
       transition: color 0.2s;
     }
-    .foot-links a:hover { color: rgba(250,247,242,0.65); }
+    .foot-links a:hover { color: var(--text-2); }
+
     .foot-domain {
       font-family: var(--f-mono);
-      font-size: 0.65rem;
-      color: rgba(250,247,242,0.12);
-      letter-spacing: 0.06em;
+      font-size: 0.62rem;
+      color: var(--text-3);
+      opacity: 0.4;
+      letter-spacing: 0.04em;
     }
 
-    /* ─── KEYFRAMES ──────────────────────────────────── */
-    @keyframes rise {
+    /* ─── KEYFRAMES ─────────────────────────────── */
+    @keyframes fade-up {
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ─── RESPONSIVE ─────────────────────────────────── */
+    /* ─── RESPONSIVE ────────────────────────────── */
     @media (max-width: 1100px) {
       .hero { grid-template-columns: 1fr; min-height: auto; }
-      .hero-right { clip-path: none; padding: 4rem 3.5rem; }
-      .dark-grid { grid-template-columns: 1fr; gap: 4rem; }
+      .hero-right { border-left: none; border-top: 1px solid var(--border); padding: 4rem 3rem; }
+      .showcase-grid { grid-template-columns: 1fr; gap: 4rem; }
       .stacks-grid { grid-template-columns: repeat(2,1fr); }
-      .steps { grid-template-columns: 1fr; }
-      .step { border-left: none; border-top: 1px solid rgba(23,19,16,0.1); padding-left: 0; }
-      .step:first-child { border-top: none; }
+      .steps { grid-template-columns: 1fr; border-left: none; }
+      .step { border-left: 1px solid var(--border); }
     }
     @media (max-width: 640px) {
-      nav { padding: 1.2rem 1.5rem; }
-      .nav-center { display: none; }
-      .hero-left { padding: 9rem 1.5rem 3rem; }
-      .hero-right { padding: 2.5rem 1.5rem 4rem; }
-      .section-wrap { padding: 0 1.5rem; }
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero-left { padding: 8.5rem 1.5rem 3rem; }
+      .hero-right { padding: 3rem 1.5rem 4rem; }
+      .wrap { padding: 0 1.5rem; }
+      .how, .showcase, .stacks { padding: 6rem 0; }
       .stacks-grid { grid-template-columns: 1fr; }
-      .cta-section { padding: 7rem 1.5rem; }
+      .cta { padding: 7rem 1.5rem; }
       footer { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
-      .foot-links { gap: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- ─── NAV ─────────────────────────────────────────── -->
+<!-- ─── NAV ──────────────────────────────────────────── -->
 <nav id="nav">
-  <a class="nav-logo" href="#"><b>ui</b>-studio</a>
-  <div class="nav-center">
+  <a class="nav-logo" href="#"><span>ui</span>-studio</a>
+  <div class="nav-links">
     <a href="#how">Process</a>
     <a href="#showcase">The TUI</a>
     <a href="#stacks">Stacks</a>
@@ -704,17 +714,17 @@
 <!-- ─── HERO ─────────────────────────────────────────── -->
 <section class="hero">
   <div class="hero-left">
-    <p class="hero-eyebrow">001 / Studio generator</p>
+    <p class="hero-label">Studio generator · Powered by Claude</p>
     <h1 class="hero-h1">
-      Generate<br>
-      <em>any studio.</em>
+      <span class="outline">GENERATE</span>
+      <span class="solid">any studio.</span>
     </h1>
-    <p class="hero-p">
-      A self-expanding Claude Code studio factory. Point it at any codebase — it infers your patterns, conventions, and stack, then generates a specialized AI coding assistant built around <em>your</em> code.
+    <p class="hero-sub">
+      A self-expanding Claude Code studio factory. Point it at any codebase — it <strong>infers your patterns, conventions, and stack</strong>, then generates a specialized AI coding assistant built around <strong>your</strong> code.
     </p>
-    <div class="hero-btns">
-      <a href="#install" class="btn-fill">Generate a studio</a>
-      <a href="https://github.com/dvrd/ui-studio" class="btn-ghost">View on GitHub</a>
+    <div class="hero-actions">
+      <a href="#install" class="btn-primary">Generate a studio</a>
+      <a href="https://github.com/dvrd/ui-studio" class="btn-secondary">View on GitHub</a>
     </div>
   </div>
 
@@ -733,7 +743,7 @@
 
 <!-- ─── TICKER ────────────────────────────────────────── -->
 <div class="ticker" aria-hidden="true">
-  <div class="ticker-row" id="tickerRow">
+  <div class="ticker-row">
     <span class="ti hot">Go + Templ + HTMX</span>
     <span class="ti">Next.js + Drizzle</span>
     <span class="ti">Python + FastAPI</span>
@@ -759,32 +769,32 @@
 
 <!-- ─── HOW IT WORKS ──────────────────────────────────── -->
 <section class="how" id="how">
-  <div class="section-wrap">
-    <p class="tag">002 / Process</p>
+  <div class="wrap">
+    <p class="section-label">002 / Process</p>
     <div class="steps">
 
       <div class="step reveal">
-        <div class="step-n">01</div>
+        <div class="step-n">01 / Point</div>
         <h3 class="step-title">Point at your project</h3>
         <p class="step-p">Run the interactive TUI wizard and provide a path to your existing codebase. Or describe your stack manually if you're starting fresh.</p>
-        <span class="code-pill">bun run cli</span>
+        <span class="code-chip">bun run cli</span>
       </div>
 
-      <div class="step reveal" style="transition-delay:.14s">
-        <div class="step-n">02</div>
+      <div class="step reveal" style="transition-delay:.1s">
+        <div class="step-n">02 / Infer</div>
         <h3 class="step-title">Patterns are inferred</h3>
         <p class="step-p">ui-studio scans your handlers, services, repositories, models, and components — extracting real conventions from real code, not templates.</p>
-        <span class="code-pill">
+        <span class="code-chip">
           <span class="ok">✓</span> Go + chi + Templ detected<br>
           <span class="ok">✓</span> 7 patterns inferred
         </span>
       </div>
 
-      <div class="step reveal" style="transition-delay:.28s">
-        <div class="step-n">03</div>
+      <div class="step reveal" style="transition-delay:.2s">
+        <div class="step-n">03 / Generate</div>
         <h3 class="step-title">Studio is generated</h3>
-        <p class="step-p">A complete Claude Code plugin lands in <code style="font-family:var(--f-mono);font-size:0.85em">~/.claude/plugins/</code> with a pattern MCP server, skills, agents, and rules tailored to your stack.</p>
-        <span class="code-pill"><span class="ok">✓</span> nextjs-studio installed</span>
+        <p class="step-p">A complete Claude Code plugin lands in <code style="font-family:var(--f-mono);font-size:0.85em;color:var(--lime)">~/.claude/plugins/</code> with a pattern MCP server, skills, agents, and rules tailored to your stack.</p>
+        <span class="code-chip"><span class="acc">✦</span> nextjs-studio activated</span>
       </div>
 
     </div>
@@ -792,22 +802,23 @@
 </section>
 
 <!-- ─── SHOWCASE ───────────────────────────────────────── -->
-<section class="dark-section" id="showcase">
-  <div class="dark-bg-word">studio</div>
-  <div class="section-wrap">
-    <div class="dark-grid">
+<section class="showcase" id="showcase">
+  <div class="bg-word" aria-hidden="true">studio</div>
+  <div class="wrap">
+    <div class="showcase-grid">
+
       <div class="reveal">
-        <p class="tag dark-tag">003 / The TUI</p>
-        <h2 class="dark-h2">An <em>interactive</em><br>wizard for every<br>new project</h2>
-        <p class="dark-p">
-          Built with OpenTUI — a native Zig terminal renderer. The wizard detects your stack, confirms inferred patterns, and installs the studio in seconds.
+        <p class="section-label">003 / The TUI</p>
+        <h2 class="showcase-h2">An <span>interactive</span><br>wizard for<br>every project</h2>
+        <p class="showcase-p">
+          Built with OpenTUI — a native Zig terminal renderer. Detects your stack, confirms inferred patterns, and installs the studio in seconds.
         </p>
         <ul class="feat-list">
-          <li>Detects Go, Next.js, Python, Flutter, Rust, Node.js automatically</li>
+          <li>Auto-detects Go, Next.js, Python, Flutter, Rust, Node.js</li>
           <li>Infers conventions from actual source files — not guesswork</li>
           <li>Falls back to manual description when no code exists yet</li>
-          <li>Registers the MCP server in <code style="font-family:var(--f-mono);font-size:0.85em;color:rgba(255,255,255,0.6)">~/.claude/settings.json</code></li>
-          <li>Re-runs inference via <code style="font-family:var(--f-mono);font-size:0.82em;color:var(--orange-l)">expand_studio</code> as the project grows</li>
+          <li>Registers the MCP server in <code style="font-family:var(--f-mono);font-size:0.85em;color:var(--text-2)">~/.claude/settings.json</code></li>
+          <li>Re-runs inference via <code style="font-family:var(--f-mono);font-size:0.82em;color:var(--lime)">expand_studio</code> as the project grows</li>
         </ul>
       </div>
 
@@ -818,81 +829,90 @@
         </div>
         <div class="tui-box">
           <div class="tui-row"><span class="tui-divider">┌─────────────────────────────────────────┐</span></div>
-          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#3b82f6">ui</span><span style="color:#e6edf3">-studio</span> <span style="color:#4d5566">generator</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#c8ff00">ui</span><span style="color:#f0f0f0">-studio</span> <span style="color:#444">generator</span></span><span class="tui-border-v">│</span></div>
           <div class="tui-row"><span class="tui-divider">├─────────────────────────────────────────┤</span></div>
-          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#4d5566">Step 2/4</span>&nbsp; <span style="color:#e6edf3">Project path</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#444">Step 2/4</span>&nbsp; <span style="color:#f0f0f0">Project path</span></span><span class="tui-border-v">│</span></div>
           <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell"></span><span class="tui-border-v">│</span></div>
-          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#4d5566">Path to existing project to infer</span></span><span class="tui-border-v">│</span></div>
-          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#4d5566">patterns from. Leave empty for manual.</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#555">Path to existing project to infer</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#555">patterns from. Leave empty for manual.</span></span><span class="tui-border-v">│</span></div>
           <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell"></span><span class="tui-border-v">│</span></div>
-          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;<span style="color:#3b4250">┌───────────────────────────────────┐</span></span><span class="tui-border-v">│</span></div>
-          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;<span style="color:#3b4250">│</span> <span style="color:#e6edf3">/Users/dev/my-nextjs-app</span><span style="color:#3b82f6">▌</span><span style="color:#3b4250">│</span></span><span class="tui-border-v">│</span></div>
-          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;<span style="color:#3b4250">└───────────────────────────────────┘</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;<span style="color:#252830">┌───────────────────────────────────┐</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;<span style="color:#252830">│</span> <span style="color:#f0f0f0">/Users/dev/my-nextjs-app</span><span style="color:#c8ff00">▌</span><span style="color:#252830">│</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;<span style="color:#252830">└───────────────────────────────────┘</span></span><span class="tui-border-v">│</span></div>
           <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell"></span><span class="tui-border-v">│</span></div>
           <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#22c55e">✓ Detected: Next.js + Drizzle ORM</span></span><span class="tui-border-v">│</span></div>
           <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#22c55e">✓ Features: stripe, auth, drizzle</span></span><span class="tui-border-v">│</span></div>
           <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#22c55e">✓ Patterns inferred: 5</span></span><span class="tui-border-v">│</span></div>
-          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;&nbsp;&nbsp; <span style="color:#58a6ff">• api-routes &nbsp;• components &nbsp;• lib</span></span><span class="tui-border-v">│</span></div>
-          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;&nbsp;&nbsp; <span style="color:#58a6ff">• db &nbsp;• server-actions</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;&nbsp;&nbsp; <span style="color:#4d8bff">• api-routes &nbsp;• components &nbsp;• lib</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp;&nbsp;&nbsp; <span style="color:#4d8bff">• db &nbsp;• server-actions</span></span><span class="tui-border-v">│</span></div>
           <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell"></span><span class="tui-border-v">│</span></div>
           <div class="tui-row"><span class="tui-divider">├─────────────────────────────────────────┤</span></div>
-          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#4d5566">Enter: next &nbsp;│&nbsp; Esc: back &nbsp;│&nbsp; ^C: quit</span></span><span class="tui-border-v">│</span></div>
+          <div class="tui-row"><span class="tui-border-v">│</span><span class="tui-cell">&nbsp; <span style="color:#444">Enter: next &nbsp;│&nbsp; Esc: back &nbsp;│&nbsp; ^C: quit</span></span><span class="tui-border-v">│</span></div>
           <div class="tui-row"><span class="tui-divider">└─────────────────────────────────────────┘</span></div>
         </div>
       </div>
+
     </div>
   </div>
 </section>
 
 <!-- ─── STACKS ─────────────────────────────────────────── -->
-<section class="stacks-section" id="stacks">
-  <div class="section-wrap">
-    <p class="tag">004 / Supported stacks</p>
+<section class="stacks" id="stacks">
+  <div class="wrap">
+    <p class="section-label">004 / Supported stacks</p>
     <div class="stacks-grid">
 
       <div class="stack-card reveal">
+        <span class="stack-arrow">→</span>
         <p class="stack-id">go-templ</p>
         <h3 class="stack-name">Go + Templ + HTMX</h3>
-        <p class="stack-desc">chi router, pgx, Goose migrations, Tailwind v4, templUI components</p>
+        <p class="stack-desc">chi router, pgx, Goose migrations, Tailwind v4, templUI</p>
       </div>
 
-      <div class="stack-card reveal" style="transition-delay:.06s">
+      <div class="stack-card reveal" style="transition-delay:.05s">
+        <span class="stack-arrow">→</span>
         <p class="stack-id">nextjs</p>
         <h3 class="stack-name">Next.js</h3>
         <p class="stack-desc">App router, Drizzle or Prisma, Stripe, Clerk or next-auth</p>
       </div>
 
-      <div class="stack-card reveal" style="transition-delay:.12s">
+      <div class="stack-card reveal" style="transition-delay:.1s">
+        <span class="stack-arrow">→</span>
         <p class="stack-id">python-fastapi</p>
         <h3 class="stack-name">Python + FastAPI</h3>
-        <p class="stack-desc">SQLAlchemy, Pydantic models, Alembic migrations, Celery tasks</p>
+        <p class="stack-desc">SQLAlchemy, Pydantic, Alembic migrations, Celery tasks</p>
       </div>
 
-      <div class="stack-card reveal" style="transition-delay:.18s">
+      <div class="stack-card reveal" style="transition-delay:.15s">
+        <span class="stack-arrow">→</span>
         <p class="stack-id">flutter</p>
         <h3 class="stack-name">Flutter</h3>
-        <p class="stack-desc">Riverpod state, Dio HTTP client, go_router navigation patterns</p>
+        <p class="stack-desc">Riverpod state, Dio HTTP, go_router navigation</p>
       </div>
 
-      <div class="stack-card reveal" style="transition-delay:.24s">
+      <div class="stack-card reveal" style="transition-delay:.2s">
+        <span class="stack-arrow">→</span>
         <p class="stack-id">rust-axum</p>
         <h3 class="stack-name">Rust + Axum</h3>
-        <p class="stack-desc">sqlx, diesel, Tower middleware, Serde serialization patterns</p>
+        <p class="stack-desc">sqlx, diesel, Tower middleware, Serde serialization</p>
       </div>
 
-      <div class="stack-card reveal" style="transition-delay:.30s">
+      <div class="stack-card reveal" style="transition-delay:.25s">
+        <span class="stack-arrow">→</span>
         <p class="stack-id">node-fastify</p>
         <h3 class="stack-name">Node.js + Fastify</h3>
-        <p class="stack-desc">TypeScript, Fastify plugins, Prisma or Drizzle, optional tRPC</p>
+        <p class="stack-desc">TypeScript, Fastify plugins, Prisma or Drizzle, tRPC</p>
       </div>
 
-      <div class="stack-card reveal" style="transition-delay:.36s">
+      <div class="stack-card reveal" style="transition-delay:.3s">
+        <span class="stack-arrow">→</span>
         <p class="stack-id">python-django</p>
         <h3 class="stack-name">Django</h3>
-        <p class="stack-desc">DRF views, model conventions, migrations, Celery, pytest patterns</p>
+        <p class="stack-desc">DRF views, model conventions, Celery, pytest patterns</p>
       </div>
 
-      <div class="stack-card reveal" style="transition-delay:.42s">
+      <div class="stack-card reveal" style="transition-delay:.35s">
+        <span class="stack-arrow">→</span>
         <p class="stack-id">custom</p>
         <h3 class="stack-name">Your stack</h3>
         <p class="stack-desc">Any codebase. If it has source files, ui-studio can infer its patterns.</p>
@@ -903,23 +923,23 @@
 </section>
 
 <!-- ─── CTA ───────────────────────────────────────────── -->
-<section class="cta-section" id="install">
-  <div class="cta-watermark" aria-hidden="true">generate</div>
-  <p class="cta-tag">005 / Get started</p>
-  <h2 class="cta-h2">Your studio,<br>in seconds.</h2>
+<section class="cta" id="install">
+  <div class="cta-word" aria-hidden="true">generate</div>
+  <p class="cta-label">005 / Get started</p>
+  <h2 class="cta-h2">Your studio,<br><span>in seconds.</span></h2>
   <div class="install-box" onclick="copyCmd(this)">
     <code>cd ui-studio/generator &amp;&amp; bun run cli</code>
     <span class="copy-hint" id="copyHint">copy</span>
   </div>
   <div class="cta-btns">
     <a class="btn-dark" href="https://github.com/dvrd/ui-studio">View on GitHub</a>
-    <a class="btn-stroke" href="https://github.com/dvrd/ui-studio#readme">Read the docs</a>
+    <a class="btn-outline" href="https://github.com/dvrd/ui-studio#readme">Read the docs</a>
   </div>
 </section>
 
 <!-- ─── FOOTER ────────────────────────────────────────── -->
 <footer>
-  <div class="foot-logo"><b>ui</b>-studio</div>
+  <div class="foot-logo"><span>ui</span>-studio</div>
   <nav class="foot-links">
     <a href="https://github.com/dvrd/ui-studio">GitHub</a>
     <a href="https://github.com/dvrd/ui-studio/issues">Issues</a>
@@ -929,19 +949,21 @@
 </footer>
 
 <script>
-// ── Nav scroll ──────────────────────────────────────────
+// Nav scroll
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
-// ── Reveal on scroll ────────────────────────────────────
+// Reveal on scroll
 const io = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-}, { threshold: 0.12 });
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-// ── Terminal typing animation ────────────────────────────
+// Terminal typing animation
 const termBody = document.getElementById('termBody');
 const typeTarget = document.getElementById('typeTarget');
 const cur = document.getElementById('cur');
@@ -977,7 +999,6 @@ function addLine(cls, text) {
   termBody.scrollTop = termBody.scrollHeight;
 }
 
-let typed = '';
 function typeChar(text, i, cb) {
   if (i >= text.length) { cb && cb(); return; }
   typeTarget.textContent += text[i];
@@ -999,7 +1020,7 @@ seq.forEach(({ t, type, text, cls }) => {
   }, t + 800);
 });
 
-// ── Copy install cmd ─────────────────────────────────────
+// Copy install command
 function copyCmd(el) {
   const hint = document.getElementById('copyHint');
   navigator.clipboard.writeText('cd ui-studio/generator && bun run cli').then(() => {
