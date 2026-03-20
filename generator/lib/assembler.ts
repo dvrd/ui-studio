@@ -1,5 +1,5 @@
-import { mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { mkdirSync, writeFileSync, existsSync } from 'fs';
+import { join, resolve } from 'path';
 import type { StackInfo } from './detector';
 import type { InferredPattern } from './inferrer';
 import {
@@ -11,10 +11,15 @@ import {
   orchestratorGuide,
   intentRouting,
   conventionsMd,
+  codeQualityMd,
+  navigatorUsageMd,
   mcpIndexTs,
   mcpResourcesTs,
   mcpPackageJson,
 } from './templates';
+
+// Resolve the navigator-mcp path relative to this file (generator/lib/ → ../../navigator-mcp/)
+const NAVIGATOR_MCP_PATH = resolve(import.meta.dir, '..', '..', 'navigator-mcp', 'index.ts');
 
 export interface StudioConfig {
   name: string;
@@ -40,9 +45,12 @@ export function assembleStudio(config: StudioConfig): string {
 
   const base = installPath;
 
+  // Detect navigator-mcp availability
+  const navigatorPath = existsSync(NAVIGATOR_MCP_PATH) ? NAVIGATOR_MCP_PATH : undefined;
+
   // Plugin registration
   write(join(base, '.claude-plugin', 'plugin.json'), pluginJson(v));
-  write(join(base, '.mcp.json'), mcpJson(v));
+  write(join(base, '.mcp.json'), mcpJson(v, navigatorPath));
 
   // Hooks
   write(join(base, 'hooks', 'session-start.ts'), sessionStartTs(v));
@@ -52,6 +60,8 @@ export function assembleStudio(config: StudioConfig): string {
   write(join(base, 'rules', 'orchestrator-guide.md'), orchestratorGuide(v));
   write(join(base, 'rules', 'intent-routing.md'), intentRouting(v));
   write(join(base, 'rules', 'conventions.md'), conventionsMd(v, patterns, userDefinedConventions));
+  write(join(base, 'rules', 'code-quality.md'), codeQualityMd(v));
+  write(join(base, 'rules', 'navigator-usage.md'), navigatorUsageMd(v));
 
   // MCP server
   write(join(base, 'mcp', 'index.ts'), mcpIndexTs(v));
