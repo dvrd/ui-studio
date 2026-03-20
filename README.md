@@ -17,9 +17,13 @@ Studios are installed to `~/.claude/plugins/` and registered in `~/.claude/setti
 ```
 go-stack-mcp/          MCP server — Go+Templ+HTMX patterns and guides
 templui-mcp/           MCP server — templUI v1.6 component docs
+web-patterns-mcp/      MCP server — universal web patterns + stack-specific adapters
+design-system-mcp/     MCP server — design system component docs (pluggable)
+navigator-mcp/         MCP server — passive workflow graph walker
 generator/             Studio generator (MCP server + OpenTUI CLI)
 plugins/
   go-studio/           Claude Code plugin for the Go SaaS stack
+  web-studio/          Claude Code plugin for stack-agnostic web applications
   studio-generator/    Claude Code plugin that exposes the generator
 docs/                  GitHub Pages landing (ui-studio.devoured.io)
 ```
@@ -100,9 +104,37 @@ list_studios()
 remove_studio(name: "myapp-studio")
 ```
 
-## Built-in studio: go-studio
+## Built-in studios
 
-The `plugins/go-studio/` directory is a fully built studio for the standard Go SaaS stack:
+### web-studio (stack-agnostic)
+
+`plugins/web-studio/` works with any web framework. It uses a 3-phase step protocol (Analyze → Do → Verify) and 3-layer intent routing.
+
+**Supported stacks**: Go+Templ+HTMX, Next.js/React, SvelteKit/Svelte, Nuxt/Vue — and any other web framework through universal patterns.
+
+**MCP servers**: `web-patterns` (universal patterns + stack adapters), `design-system` (component docs), `chrome-devtools` (visual verification), `navigator` (workflow graph walker).
+
+| Command | What it does |
+|---|---|
+| `/web-studio:scaffold-app` | Scaffold a new web application (any stack) |
+| `/web-studio:build-auth` | Add authentication (JWT, session, OAuth, magic link) |
+| `/web-studio:build-feature [name]` | Add a domain feature (service + routes + UI) |
+| `/web-studio:build-page [name]` | Add a new page/route |
+| `/web-studio:build-component [name]` | Build an interactive component |
+| `/web-studio:build-payments` | Add payment integration (Stripe/LemonSqueezy) |
+| `/web-studio:build-email` | Add transactional email |
+| `/web-studio:build-realtime` | Add real-time updates (SSE/WebSocket) |
+| `/web-studio:build-tests` | Write unit + integration tests for all features |
+| `/web-studio:add-responsive` | Make all pages responsive (mobile + tablet + desktop) |
+| `/web-studio:build-mobile [name]` | Build a mobile screen consuming the web API |
+| `/web-studio:smoke-test` | Visual smoke test via Chrome DevTools |
+| `/web-studio:review` | Full code review (security, correctness, conventions) |
+| `/web-studio:ship` | Lint, test, and commit |
+| `/web-studio:deliver` | Full delivery pipeline (scaffold → auth → features → responsive → tests → verify → ship) |
+
+### go-studio (Go SaaS stack)
+
+`plugins/go-studio/` is a fully built studio for the standard Go SaaS stack:
 
 | Stack component | Choice |
 |---|---|
@@ -116,8 +148,6 @@ The `plugins/go-studio/` directory is a fully built studio for the standard Go S
 | Email | Resend |
 | Storage | S3-compatible (MinIO dev / Cloudflare R2 prod) |
 | AI | OpenRouter |
-
-### Go studio skills
 
 | Command | What it does |
 |---|---|
