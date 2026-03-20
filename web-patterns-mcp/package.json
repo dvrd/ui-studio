@@ -1,0 +1,11 @@
+{
+  "name": "@web-studio/web-patterns-mcp",
+  "version": "2.0.0",
+  "private": true,
+  "description": "MCP server serving universal web patterns and stack-specific implementations",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.1",
+    "zod": "^3.25.0"
+  }
+}
