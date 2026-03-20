@@ -1,0 +1,120 @@
+{
+  "id": "web-app-delivery",
+  "name": "Web App Delivery",
+  "description": "Full delivery workflow for a new web application: scaffold → auth → services → integrations → responsive → smoke test → ship.",
+  "nodes": {
+    "start": {
+      "type": "start",
+      "name": "Start",
+      "description": "Begin web app delivery. Confirm appName, stackId, designSystem, and features list with user. Resolve projectDir."
+    },
+    "scaffold": {
+      "type": "task",
+      "name": "Scaffold App",
+      "description": "Read plugins/web-studio/steps/scaffold/init-project.md and follow its 3-phase protocol.",
+      "stage": "planning"
+    },
+    "scaffold_verify": {
+      "type": "gate",
+      "name": "Verify Scaffold",
+      "description": "Read plugins/web-studio/steps/scaffold/verify-scaffold.md. Build must pass and app must load in Chrome.",
+      "stage": "verification",
+      "maxRetries": 2
+    },
+    "build_auth": {
+      "type": "task",
+      "name": "Build Auth",
+      "description": "Read plugins/web-studio/steps/auth/build-auth.md and follow its 3-phase protocol.",
+      "stage": "development"
+    },
+    "auth_verify": {
+      "type": "gate",
+      "name": "Verify Auth",
+      "description": "Read plugins/web-studio/steps/auth/verify-auth.md. Auth pages must render and protected redirect must work.",
+      "stage": "verification",
+      "maxRetries": 2
+    },
+    "build_features": {
+      "type": "task",
+      "name": "Build Domain Services",
+      "description": "For each feature the user specified: read plugins/web-studio/steps/feature/build-service.md and build the service. Use SetItems for multiple features.",
+      "stage": "development"
+    },
+    "features_verify": {
+      "type": "gate",
+      "name": "Verify Features",
+      "description": "Run the stack's build command — all services must compile. Check routes are registered.",
+      "stage": "verification",
+      "maxRetries": 2
+    },
+    "build_integrations": {
+      "type": "task",
+      "name": "Build Integrations",
+      "description": "For each integration (payments, email, realtime): read the corresponding step in plugins/web-studio/steps/integration/ and build it. Use SetItems.",
+      "stage": "development"
+    },
+    "integrations_verify": {
+      "type": "gate",
+      "name": "Verify Integrations",
+      "description": "Run build command. Verify integration endpoints respond correctly.",
+      "stage": "verification",
+      "maxRetries": 2
+    },
+    "smoke_test": {
+      "type": "task",
+      "name": "Smoke Test",
+      "description": "Read plugins/web-studio/steps/delivery/smoke-test.md. Visual verification of all routes.",
+      "stage": "verification"
+    },
+    "review": {
+      "type": "task",
+      "name": "Code Review",
+      "description": "Read plugins/web-studio/steps/delivery/review.md. Full code review for security and correctness.",
+      "stage": "verification"
+    },
+    "ship": {
+      "type": "task",
+      "name": "Ship",
+      "description": "Read plugins/web-studio/steps/delivery/ship.md. Lint, test, and commit.",
+      "stage": "delivery"
+    },
+    "end_success": {
+      "type": "end",
+      "result": "success",
+      "name": "App Delivered",
+      "description": "App is scaffolded, auth works, features are built, integrations wired, visually verified, code reviewed, and committed."
+    },
+    "hitl_blocked": {
+      "type": "end",
+      "result": "blocked",
+      "escalation": "hitl",
+      "name": "Blocked",
+      "description": "A step failed and could not be automatically resolved. Review the error and decide how to proceed."
+    }
+  },
+  "edges": [
+    { "from": "start", "to": "scaffold" },
+    { "from": "scaffold", "to": "scaffold_verify" },
+    { "from": "scaffold_verify", "to": "build_auth", "on": "passed" },
+    { "from": "scaffold_verify", "to": "scaffold", "on": "failed" },
+    { "from": "scaffold_verify", "to": "hitl_blocked", "on": "exhausted" },
+    { "from": "build_auth", "to": "auth_verify" },
+    { "from": "auth_verify", "to": "build_features", "on": "passed" },
+    { "from": "auth_verify", "to": "build_auth", "on": "failed" },
+    { "from": "auth_verify", "to": "hitl_blocked", "on": "exhausted" },
+    { "from": "build_features", "to": "features_verify" },
+    { "from": "features_verify", "to": "build_integrations", "on": "passed" },
+    { "from": "features_verify", "to": "build_features", "on": "failed" },
+    { "from": "features_verify", "to": "hitl_blocked", "on": "exhausted" },
+    { "from": "build_integrations", "to": "integrations_verify" },
+    { "from": "integrations_verify", "to": "smoke_test", "on": "passed" },
+    { "from": "integrations_verify", "to": "build_integrations", "on": "failed" },
+    { "from": "integrations_verify", "to": "hitl_blocked", "on": "exhausted" },
+    { "from": "smoke_test", "to": "review", "on": "passed" },
+    { "from": "smoke_test", "to": "hitl_blocked", "on": "failed" },
+    { "from": "review", "to": "ship", "on": "passed" },
+    { "from": "review", "to": "hitl_blocked", "on": "failed" },
+    { "from": "ship", "to": "end_success", "on": "passed" },
+    { "from": "ship", "to": "hitl_blocked", "on": "failed" }
+  ]
+}

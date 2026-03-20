@@ -1,0 +1,78 @@
+{
+  "id": "feature-delivery",
+  "name": "Feature Delivery",
+  "description": "Single feature delivery: analyze → build data layer → build routes → build UI → verify → ship.",
+  "nodes": {
+    "start": {
+      "type": "start",
+      "name": "Start",
+      "description": "Confirm featureName, resource fields, auth requirements, and HTTP methods with user."
+    },
+    "build_service": {
+      "type": "task",
+      "name": "Build Service",
+      "description": "Read plugins/web-studio/steps/feature/build-service.md and follow its 3-phase protocol.",
+      "stage": "development"
+    },
+    "service_verify": {
+      "type": "gate",
+      "name": "Verify Service",
+      "description": "Run build command. Verify all CRUD routes are registered.",
+      "stage": "verification",
+      "maxRetries": 2
+    },
+    "build_pages": {
+      "type": "task",
+      "name": "Build Pages",
+      "description": "Read plugins/web-studio/steps/feature/build-page.md for each page needed by the feature.",
+      "stage": "development"
+    },
+    "pages_verify": {
+      "type": "gate",
+      "name": "Verify Pages",
+      "description": "Visual verification of all feature pages via Chrome DevTools.",
+      "stage": "verification",
+      "maxRetries": 2
+    },
+    "smoke_test": {
+      "type": "task",
+      "name": "Smoke Test",
+      "description": "Navigate to each feature route, screenshot, check console.",
+      "stage": "verification"
+    },
+    "ship": {
+      "type": "task",
+      "name": "Ship",
+      "description": "Read plugins/web-studio/steps/delivery/ship.md. Lint, test, and commit.",
+      "stage": "delivery"
+    },
+    "end_success": {
+      "type": "end",
+      "result": "success",
+      "name": "Feature Delivered",
+      "description": "Feature is built, visually verified, and committed."
+    },
+    "hitl_blocked": {
+      "type": "end",
+      "result": "blocked",
+      "escalation": "hitl",
+      "name": "Blocked",
+      "description": "A step failed. Review and decide how to proceed."
+    }
+  },
+  "edges": [
+    { "from": "start", "to": "build_service" },
+    { "from": "build_service", "to": "service_verify" },
+    { "from": "service_verify", "to": "build_pages", "on": "passed" },
+    { "from": "service_verify", "to": "build_service", "on": "failed" },
+    { "from": "service_verify", "to": "hitl_blocked", "on": "exhausted" },
+    { "from": "build_pages", "to": "pages_verify" },
+    { "from": "pages_verify", "to": "smoke_test", "on": "passed" },
+    { "from": "pages_verify", "to": "build_pages", "on": "failed" },
+    { "from": "pages_verify", "to": "hitl_blocked", "on": "exhausted" },
+    { "from": "smoke_test", "to": "ship", "on": "passed" },
+    { "from": "smoke_test", "to": "hitl_blocked", "on": "failed" },
+    { "from": "ship", "to": "end_success", "on": "passed" },
+    { "from": "ship", "to": "hitl_blocked", "on": "failed" }
+  ]
+}

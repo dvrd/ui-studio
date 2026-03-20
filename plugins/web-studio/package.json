@@ -1,0 +1,6 @@
+{
+  "name": "@web-studio/plugin",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Web Studio Claude Code plugin — tech-agnostic web app builder"
+}

@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "navigator": {
+      "command": "bun",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../../navigator-mcp/index.ts"],
+      "description": "Passive graph walker for workflow execution. Required for Layer 3 Navigator workflows."
+    },
+    "web-patterns": {
+      "command": "bun",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../../web-patterns-mcp/index.ts"],
+      "description": "Universal web patterns + stack-specific implementations. Source of truth for how to build."
+    },
+    "design-system": {
+      "command": "bun",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../../design-system-mcp/index.ts"],
+      "description": "Design system component documentation. Pluggable per project."
+    },
+    "chrome-devtools": {
+      "command": "bunx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--viewport=1440x900"],
+      "description": "Browser automation for visual verification. Required for smoke tests."
+    }
+  }
+}

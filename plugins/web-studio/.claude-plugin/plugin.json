@@ -1,0 +1,9 @@
+{
+  "name": "web-studio",
+  "description": "Web Studio — builds production web applications across any tech stack with consistent quality through pattern-driven development and mandatory visual verification.",
+  "version": "2.0.0",
+  "author": {
+    "name": "Web Studio"
+  },
+  "keywords": ["web", "fullstack", "saas", "nextjs", "sveltekit", "nuxt", "go", "rails", "django", "multi-stack"]
+}
