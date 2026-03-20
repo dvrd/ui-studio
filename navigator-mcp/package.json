@@ -1,0 +1,13 @@
+{
+  "name": "@ui-studio/navigator-mcp",
+  "version": "1.0.0",
+  "description": "Passive graph walker for web-studio workflow execution",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "start": "bun index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}
