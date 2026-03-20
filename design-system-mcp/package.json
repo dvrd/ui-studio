@@ -1,0 +1,11 @@
+{
+  "name": "@web-studio/design-system-mcp",
+  "version": "2.0.0",
+  "private": true,
+  "description": "MCP server serving design system component documentation across multiple UI libraries",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.1",
+    "zod": "^3.25.0"
+  }
+}
